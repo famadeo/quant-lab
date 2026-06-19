@@ -1,5 +1,7 @@
 # HYP-0000-smoke: Synthetic moving-average smoke test
 
+> This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 - Status: `revise`
 - Owner: `famadeo`
 - Decision notes: Smoke run only. No trading claim.
@@ -7,6 +9,10 @@
 ## Hypothesis
 
 This experiment validates that the research stack can run a deterministic signal, lag positions, apply costs, write artifacts, and log to MLflow.
+
+## Conceptual Description
+
+This is an infrastructure-control experiment, not a market hypothesis. It uses synthetic data to confirm that the lab can execute the full scientific-method workflow end to end before any real trading idea is evaluated.
 
 ## Experiment Design
 
@@ -39,6 +45,8 @@ This experiment validates that the research stack can run a deterministic signal
 
 ## Publication Notes
 
+- Proprietary work by Francisco Amadeo. All rights reserved.
+- Public access does not grant permission to copy, reuse, redistribute, commercialize, or implement this research.
 - Local data roots and artifact paths are intentionally omitted.
 - Raw data, parquet outputs, MLflow state, and credentials are not published.
 - This page is a summary; the experiment folder remains the source of truth.

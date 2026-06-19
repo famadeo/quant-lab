@@ -1,8 +1,13 @@
-# Quant Lab Wiki
+# Francisco Amadeo Quant Lab Wiki
 
-This wiki is the publishable research record for the quantitative strategy lab.
-It documents hypotheses, experiment design, results, decisions, and promotion
-gates without publishing raw market data, credentials, or local-only artifacts.
+This wiki is Francisco Amadeo's proprietary research record for hypothesis-driven
+quantitative strategy work. It documents hypotheses, experiment design, results,
+decisions, and promotion gates without publishing raw market data, credentials,
+or local-only artifacts.
+
+Public access is provided for review and documentation only. No license is
+granted to copy, reuse, redistribute, commercialize, or implement the research,
+strategy logic, experiment designs, or derived conclusions.
 
 ## Start Here
 
@@ -10,6 +15,7 @@ gates without publishing raw market data, credentials, or local-only artifacts.
 - [Agent workflows](agent-workflows.md)
 - [Promotion gates](promotion-gates.md)
 - [Publication policy](publication-policy.md)
+- [Proprietary notice](proprietary-notice.md)
 - [Experiment index](experiments/index.md)
 - [Overall results](results/index.md)
 

@@ -1,5 +1,7 @@
 # HYP-0002-equity-top100-pairs: Equity-only relative value branch
 
+> This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 - Status: `revise`
 - Owner: `famadeo`
 - Decision notes: Strict equity-index futures baseline. Top-100 market-cap branch not run until billable Databento equity pull is explicitly allowed.
@@ -7,6 +9,10 @@
 ## Hypothesis
 
 Equity-only pairs may contain more idiosyncratic relative-value structure than the cross-asset macro futures universe. The strict futures baseline uses the locally available equity-index futures; the top-100 market-cap branch uses Databento US equities rather than futures.
+
+## Conceptual Description
+
+This branch narrows the search from a broad macro futures universe to equity relative value. The premise is that equity instruments may share enough common market exposure for spreads to mean-revert, while still retaining enough idiosyncratic dispersion to create tradable relative moves. The documented run is the strict equity-index futures baseline; the top-100 single-name equity branch remains gated behind explicit approval for the billable Databento pull.
 
 ## Experiment Design
 
@@ -50,6 +56,8 @@ Equity-only pairs may contain more idiosyncratic relative-value structure than t
 
 ## Publication Notes
 
+- Proprietary work by Francisco Amadeo. All rights reserved.
+- Public access does not grant permission to copy, reuse, redistribute, commercialize, or implement this research.
 - Local data roots and artifact paths are intentionally omitted.
 - Raw data, parquet outputs, MLflow state, and credentials are not published.
 - This page is a summary; the experiment folder remains the source of truth.

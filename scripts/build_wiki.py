@@ -11,6 +11,12 @@ DOCS_DIR = ROOT / "docs"
 EXPERIMENTS_DIR = ROOT / "experiments"
 PUBLIC_EXPERIMENTS_DIR = DOCS_DIR / "experiments"
 PUBLIC_RESULTS_DIR = DOCS_DIR / "results"
+PROPRIETARY_NOTICE = (
+    "This page is part of Francisco Amadeo's proprietary quantitative research "
+    "record. Public access is provided for review and documentation only; no "
+    "license is granted to copy, reuse, redistribute, commercialize, or implement "
+    "the research, strategy logic, or derived conclusions."
+)
 
 
 def main() -> None:
@@ -50,6 +56,11 @@ def _build_experiment(entry: dict[str, Any]) -> dict[str, Any]:
     return {
         "id": experiment_id,
         "title": str(config.get("title") or entry.get("title") or experiment_id),
+        "conceptual_description": str(
+            config.get("conceptual_description")
+            or entry.get("conceptual_description")
+            or "No conceptual description recorded."
+        ),
         "status": str(decision.get("status") or entry.get("status") or "unknown"),
         "owner": str(entry.get("owner") or ""),
         "notes": str(decision.get("notes") or entry.get("notes") or ""),
@@ -87,8 +98,8 @@ def _latest_decision(
 
 def _render_experiment_index(experiments: list[dict[str, Any]]) -> str:
     rows = [
-        "| ID | Title | Status | Best Result | Notes |",
-        "|---|---|---|---:|---|",
+        "| ID | Title | Concept | Status | Best Result | Notes |",
+        "|---|---|---|---|---:|---|",
     ]
     for experiment in experiments:
         best = _best_result(experiment["result_files"])
@@ -98,6 +109,7 @@ def _render_experiment_index(experiments: list[dict[str, Any]]) -> str:
                 [
                     f"[{experiment['id']}]({experiment['id']}.md)",
                     _escape_table(str(experiment["title"])),
+                    _escape_table(_brief_description(str(experiment["conceptual_description"]))),
                     _escape_table(str(experiment["status"])),
                     _format_percent(best["total_return"]) if best else "",
                     _escape_table(str(experiment["notes"])),
@@ -110,6 +122,8 @@ def _render_experiment_index(experiments: list[dict[str, Any]]) -> str:
             "# Experiment Index",
             "",
             "Generated from `experiments/registry.yaml` and local result artifacts.",
+            "",
+            PROPRIETARY_NOTICE,
             "",
             *rows,
             "",
@@ -144,6 +158,8 @@ def _render_results_index(experiments: list[dict[str, Any]]) -> str:
         [
             "# Overall Results",
             "",
+            PROPRIETARY_NOTICE,
+            "",
             "This page aggregates publishable method-level metrics. It is not a promotion "
             "list; every result must still pass the promotion gates before it can be "
             "treated as evidence of edge.",
@@ -159,6 +175,8 @@ def _render_experiment_page(experiment: dict[str, Any]) -> str:
     lines = [
         f"# {experiment['id']}: {experiment['title']}",
         "",
+        f"> {PROPRIETARY_NOTICE}",
+        "",
         f"- Status: `{experiment['status']}`",
         f"- Owner: `{experiment['owner'] or 'unassigned'}`",
         f"- Decision notes: {_escape_inline(experiment['notes'])}",
@@ -166,6 +184,10 @@ def _render_experiment_page(experiment: dict[str, Any]) -> str:
         "## Hypothesis",
         "",
         str(config.get("hypothesis") or "No hypothesis recorded.").strip(),
+        "",
+        "## Conceptual Description",
+        "",
+        experiment["conceptual_description"].strip(),
         "",
         "## Experiment Design",
         "",
@@ -188,6 +210,9 @@ def _render_experiment_page(experiment: dict[str, Any]) -> str:
         [
             "## Publication Notes",
             "",
+            "- Proprietary work by Francisco Amadeo. All rights reserved.",
+            "- Public access does not grant permission to copy, reuse, redistribute, "
+            "commercialize, or implement this research.",
             "- Local data roots and artifact paths are intentionally omitted.",
             "- Raw data, parquet outputs, MLflow state, and credentials are not published.",
             "- This page is a summary; the experiment folder remains the source of truth.",
@@ -397,6 +422,16 @@ def _display_method(method: str) -> str:
         "zscore_mahalanobis": "Z-score + Mahalanobis filter",
     }
     return labels.get(method, _escape_table(method))
+
+
+def _brief_description(value: str, limit: int = 180) -> str:
+    summary = value.replace("\n", " ").strip()
+    first_sentence = summary.split(". ", 1)[0].strip()
+    if first_sentence:
+        summary = first_sentence + "."
+    if len(summary) <= limit:
+        return summary
+    return summary[: limit - 3].rstrip() + "..."
 
 
 def _escape_table(value: str) -> str:

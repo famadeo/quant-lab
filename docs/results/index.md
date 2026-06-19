@@ -1,5 +1,7 @@
 # Overall Results
 
+This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 This page aggregates publishable method-level metrics. It is not a promotion list; every result must still pass the promotion gates before it can be treated as evidence of edge.
 
 | Experiment | Result File | Method | Total Return | Sharpe | Max Drawdown | Trades |

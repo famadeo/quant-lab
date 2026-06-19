@@ -5,6 +5,14 @@ hypothesis: >
   can identify joint deviations more effectively than a scalar spread z-score
   because it accounts for pair covariance and direction in the two-asset state
   space.
+conceptual_description: >
+  This experiment asks whether pair dislocations are better described as a
+  one-dimensional spread becoming unusually wide, or as a two-asset joint state
+  becoming unusual relative to its historical covariance. The z-score method
+  treats the pair as a scalar spread; the Mahalanobis method treats the same pair
+  as a covariance-aware outlier problem. Both methods are tested on the same
+  intra-sector futures universe so differences come from signal construction,
+  turnover, and costs rather than from pair selection.
 
 data:
   root_dir: /home/famadeo/research/databento-asset-browser/data/futures_5m

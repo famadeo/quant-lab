@@ -3,6 +3,21 @@
 The wiki is intended to be accessible from outside the development environment.
 Treat it as public by default unless repository access controls say otherwise.
 
+The public wiki is still proprietary work by Francisco Amadeo. Public access does
+not grant a license to copy, reuse, redistribute, commercialize, train on, or
+implement the research, hypotheses, experiment designs, strategy logic, or
+derived conclusions.
+
+## Ownership
+
+- Owner: Francisco Amadeo.
+- Rights: All rights reserved unless Francisco Amadeo grants explicit written
+  permission.
+- Scope: hypotheses, experiment designs, source summaries, wiki text,
+  methodology, strategy logic, analysis, and derived conclusions.
+- Access model: public documentation access, not open-source or open-data
+  licensing.
+
 ## Publish
 
 - Experiment IDs, titles, hypotheses, decisions, and high-level methods.

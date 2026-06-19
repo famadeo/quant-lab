@@ -4,6 +4,13 @@ hypothesis: >
   A broader GLBX equity-index futures universe may expose more relative-value
   structure than the five-root equity-index futures baseline, especially within
   economically related index and sector groups.
+conceptual_description: >
+  This experiment tests whether expanding from major equity-index futures to a
+  broader GLBX equity-index and sector-index futures universe creates a better
+  surface for intraday pairs research. It focuses on economically related groups
+  and one-minute bars, where short-lived sector, style, and capitalization
+  dislocations might appear, while strict selection and cost assumptions are used
+  to prevent interpreting noise as edge.
 
 data:
   root_dir: /home/famadeo/quant-lab/data/silver/equity_futures_1m_continuous

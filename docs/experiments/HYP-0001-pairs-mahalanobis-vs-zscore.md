@@ -1,5 +1,7 @@
 # HYP-0001-pairs-mahalanobis-vs-zscore: Mahalanobis pairs trading versus z-score pairs trading
 
+> This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 - Status: `revise`
 - Owner: `famadeo`
 - Decision notes: Initial Mahalanobis versus z-score comparison. No trading claim.
@@ -7,6 +9,10 @@
 ## Hypothesis
 
 For intra-sector futures pairs, a Mahalanobis-distance mean-reversion signal can identify joint deviations more effectively than a scalar spread z-score because it accounts for pair covariance and direction in the two-asset state space.
+
+## Conceptual Description
+
+This experiment asks whether pair dislocations are better described as a one-dimensional spread becoming unusually wide, or as a two-asset joint state becoming unusual relative to its historical covariance. The z-score method treats the pair as a scalar spread; the Mahalanobis method treats the same pair as a covariance-aware outlier problem. Both methods are tested on the same intra-sector futures universe so differences come from signal construction, turnover, and costs rather than from pair selection.
 
 ## Experiment Design
 
@@ -59,6 +65,8 @@ For intra-sector futures pairs, a Mahalanobis-distance mean-reversion signal can
 
 ## Publication Notes
 
+- Proprietary work by Francisco Amadeo. All rights reserved.
+- Public access does not grant permission to copy, reuse, redistribute, commercialize, or implement this research.
 - Local data roots and artifact paths are intentionally omitted.
 - Raw data, parquet outputs, MLflow state, and credentials are not published.
 - This page is a summary; the experiment folder remains the source of truth.

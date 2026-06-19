@@ -2,6 +2,9 @@ experiment_id: "{{EXPERIMENT_ID}}"
 title: "{{TITLE}}"
 hypothesis: >
   Replace with the falsifiable hypothesis.
+conceptual_description: >
+  Explain the market intuition, why the relationship might exist, what would
+  make it economically meaningful, and what would falsify the idea.
 
 data:
   source: synthetic

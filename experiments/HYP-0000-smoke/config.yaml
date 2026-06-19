@@ -3,6 +3,10 @@ title: Synthetic moving-average smoke test
 hypothesis: >
   This experiment validates that the research stack can run a deterministic
   signal, lag positions, apply costs, write artifacts, and log to MLflow.
+conceptual_description: >
+  This is an infrastructure-control experiment, not a market hypothesis. It uses
+  synthetic data to confirm that the lab can execute the full scientific-method
+  workflow end to end before any real trading idea is evaluated.
 
 data:
   source: synthetic

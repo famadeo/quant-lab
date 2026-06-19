@@ -1,5 +1,6 @@
-site_name: Quant Lab Wiki
-site_description: Public research wiki for hypothesis-driven quantitative strategy research.
+site_name: Francisco Amadeo Quant Lab Wiki
+site_description: Proprietary research wiki for hypothesis-driven quantitative strategy research by Francisco Amadeo.
+copyright: Proprietary work by Francisco Amadeo. All rights reserved.
 docs_dir: docs
 site_dir: site
 theme:

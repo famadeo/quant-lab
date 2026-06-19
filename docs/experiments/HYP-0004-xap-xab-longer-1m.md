@@ -1,5 +1,7 @@
 # HYP-0004-xap-xab-longer-1m: Longer-window XAP-XAB pairs robustness test
 
+> This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 - Status: `revise`
 - Owner: `famadeo`
 - Decision notes: Forced backtest after strict longer-window selection failure. No trading claim.
@@ -7,6 +9,10 @@
 ## Hypothesis
 
 The positive XAP-XAB result from the short 2026 GLBX equity-futures run may be a local sector-rotation effect. A longer pair-specific sample should reveal whether the z-score and Mahalanobis rules continue to generate enough gross return to clear costs.
+
+## Conceptual Description
+
+This is a robustness test for the XAP-XAB pair after it stood out in the shorter equity-futures screen. The objective is to separate a persistent relationship from a local selection artifact by extending the sample across 2024-2026 and then comparing the forced pair result with the strict selection outcome. A failure here weakens the case that the earlier result reflected a durable edge.
 
 ## Experiment Design
 
@@ -55,6 +61,8 @@ The positive XAP-XAB result from the short 2026 GLBX equity-futures run may be a
 
 ## Publication Notes
 
+- Proprietary work by Francisco Amadeo. All rights reserved.
+- Public access does not grant permission to copy, reuse, redistribute, commercialize, or implement this research.
 - Local data roots and artifact paths are intentionally omitted.
 - Raw data, parquet outputs, MLflow state, and credentials are not published.
 - This page is a summary; the experiment folder remains the source of truth.

@@ -5,6 +5,13 @@ hypothesis: >
   a local sector-rotation effect. A longer pair-specific sample should reveal
   whether the z-score and Mahalanobis rules continue to generate enough gross
   return to clear costs.
+conceptual_description: >
+  This is a robustness test for the XAP-XAB pair after it stood out in the
+  shorter equity-futures screen. The objective is to separate a persistent
+  relationship from a local selection artifact by extending the sample across
+  2024-2026 and then comparing the forced pair result with the strict selection
+  outcome. A failure here weakens the case that the earlier result reflected a
+  durable edge.
 
 data:
   root_dir: /home/famadeo/quant-lab/data/silver/equity_futures_1m_xap_xab_2024_2026_continuous

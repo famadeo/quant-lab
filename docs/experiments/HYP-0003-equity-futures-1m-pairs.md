@@ -1,5 +1,7 @@
 # HYP-0003-equity-futures-1m-pairs: GLBX 1-minute equity futures pairs
 
+> This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
+
 - Status: `revise`
 - Owner: `famadeo`
 - Decision notes: Broad GLBX equity futures screen. No trading claim.
@@ -7,6 +9,10 @@
 ## Hypothesis
 
 A broader GLBX equity-index futures universe may expose more relative-value structure than the five-root equity-index futures baseline, especially within economically related index and sector groups.
+
+## Conceptual Description
+
+This experiment tests whether expanding from major equity-index futures to a broader GLBX equity-index and sector-index futures universe creates a better surface for intraday pairs research. It focuses on economically related groups and one-minute bars, where short-lived sector, style, and capitalization dislocations might appear, while strict selection and cost assumptions are used to prevent interpreting noise as edge.
 
 ## Experiment Design
 
@@ -60,6 +66,8 @@ A broader GLBX equity-index futures universe may expose more relative-value stru
 
 ## Publication Notes
 
+- Proprietary work by Francisco Amadeo. All rights reserved.
+- Public access does not grant permission to copy, reuse, redistribute, commercialize, or implement this research.
 - Local data roots and artifact paths are intentionally omitted.
 - Raw data, parquet outputs, MLflow state, and credentials are not published.
 - This page is a summary; the experiment folder remains the source of truth.

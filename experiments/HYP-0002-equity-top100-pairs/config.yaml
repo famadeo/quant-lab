@@ -5,6 +5,13 @@ hypothesis: >
   the cross-asset macro futures universe. The strict futures baseline uses the
   locally available equity-index futures; the top-100 market-cap branch uses
   Databento US equities rather than futures.
+conceptual_description: >
+  This branch narrows the search from a broad macro futures universe to equity
+  relative value. The premise is that equity instruments may share enough common
+  market exposure for spreads to mean-revert, while still retaining enough
+  idiosyncratic dispersion to create tradable relative moves. The documented run
+  is the strict equity-index futures baseline; the top-100 single-name equity
+  branch remains gated behind explicit approval for the billable Databento pull.
 
 data:
   root_dir: /home/famadeo/research/databento-asset-browser/data/futures_5m
