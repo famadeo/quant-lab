@@ -1,0 +1,42 @@
+experiment_id: HYP-0000-smoke
+title: Synthetic moving-average smoke test
+hypothesis: >
+  This experiment validates that the research stack can run a deterministic
+  signal, lag positions, apply costs, write artifacts, and log to MLflow.
+
+data:
+  source: synthetic
+  symbol: SYNTH
+  start: "2020-01-01"
+  end: "2022-12-31"
+  seed: 7
+
+strategy:
+  name: moving_average_crossover
+  fast_window: 10
+  slow_window: 40
+
+backtest:
+  initial_capital: 100000
+  fee_bps: 0.5
+  slippage_bps: 1.0
+  signal_lag: 1
+  max_leverage: 1.0
+  periods_per_year: 252
+
+outputs:
+  directory: .
+  results_file: results.json
+  equity_curve_file: equity_curve.parquet
+
+mlflow:
+  experiment_name: quant-lab
+  tracking_uri: sqlite:///mlflow.db
+
+tags:
+  workflow: smoke
+  claim: none
+
+decision:
+  status: revise
+  notes: Smoke run only. No trading claim.

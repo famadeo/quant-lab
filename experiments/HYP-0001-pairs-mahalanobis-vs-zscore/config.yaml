@@ -1,0 +1,128 @@
+experiment_id: HYP-0001-pairs-mahalanobis-vs-zscore
+title: Mahalanobis pairs trading versus z-score pairs trading
+hypothesis: >
+  For intra-sector futures pairs, a Mahalanobis-distance mean-reversion signal
+  can identify joint deviations more effectively than a scalar spread z-score
+  because it accounts for pair covariance and direction in the two-asset state
+  space.
+
+data:
+  root_dir: /home/famadeo/research/databento-asset-browser/data/futures_5m
+  roots:
+    - SR3
+    - ZQ
+    - ZT
+    - ZF
+    - ZN
+    - TN
+    - ZB
+    - UB
+    - IQB
+    - HYB
+    - DHB
+    - DHY
+    - ES
+    - NQ
+    - YM
+    - RTY
+    - NIY
+    - 6E
+    - 6J
+    - 6B
+    - 6C
+    - 6A
+    - 6N
+    - 6S
+    - 6M
+    - 6L
+    - CNH
+    - 6Z
+    - CL
+    - BZ
+    - RB
+    - HO
+    - NG
+    - TTF
+    - GC
+    - SI
+    - HG
+    - PL
+    - PA
+    - ALI
+    - LTH
+    - HRC
+    - ZC
+    - ZS
+    - ZW
+    - KE
+    - ZM
+    - ZL
+    - LE
+    - GF
+    - HE
+    - DC
+    - LBR
+  asset_classes:
+    Rates: [SR3, ZQ, ZT, ZF, ZN, TN, ZB, UB]
+    Credit: [IQB, HYB, DHB, DHY]
+    Equity: [ES, NQ, YM, RTY, NIY]
+    FX: [6E, 6J, 6B, 6C, 6A, 6N, 6S, 6M, 6L, CNH, 6Z]
+    Energy: [CL, BZ, RB, HO, NG, TTF]
+    Metals: [GC, SI, HG, PL, PA, ALI, LTH, HRC]
+    Agriculture: [ZC, ZS, ZW, KE, ZM, ZL, LE, GF, HE, DC, LBR]
+  timestamp_column: ts
+  price_column: cont_logprice
+  return_column: cont_logret
+
+strategy:
+  pair_scope: intra_asset_class
+  lookback: 96
+  min_pair_observations: 500
+  z_entry: 2.0
+  z_exit: 0.5
+  mahalanobis_entry: 2.45
+  mahalanobis_exit: 1.0
+  covariance_ridge: 0.000001
+  signal_lag: 1
+  rebalance_every_bars: 12
+  min_holding_bars: 12
+  cooldown_bars: 12
+  min_position_change: 0.25
+
+selection:
+  enabled: true
+  train_fraction: 0.6
+  min_train_observations: 500
+  min_test_observations: 200
+  min_abs_return_correlation: 0.1
+  max_spread_adf_pvalue: 0.1
+  max_half_life_bars: 288
+  min_average_pair_volume: 10
+  adf_max_lag:
+
+backtest:
+  fee_bps: 0.5
+  slippage_bps: 1.0
+  periods_per_year: 69552
+
+outputs:
+  directory: .
+  results_file: results.json
+  pair_selection_file: pair_selection.csv
+  pair_metrics_file: pair_metrics.csv
+  portfolio_returns_file: portfolio_returns.parquet
+  pair_returns_file: pair_returns.parquet
+
+mlflow:
+  experiment_name: quant-lab-pairs
+  tracking_uri: sqlite:///mlflow.db
+
+tags:
+  workflow: pairs-comparison
+  data_vendor: databento
+  bar_size: 5m
+  claim: none
+
+decision:
+  status: revise
+  notes: Initial Mahalanobis versus z-score comparison. No trading claim.

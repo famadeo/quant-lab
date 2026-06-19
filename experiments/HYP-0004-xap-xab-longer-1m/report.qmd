@@ -1,0 +1,62 @@
+---
+title: "HYP-0004 Longer-Window XAP-XAB Pairs Robustness Test"
+format: html
+---
+
+## Status
+
+Initial run completed on 2026-06-19. Status: revise.
+
+## Data
+
+This experiment extends the `XAP-XAB` pair test to the Databento `GLBX.MDP3`
+`ohlcv-1m` window from 2024-01-01 through 2026-06-19. The raw parent-symbol bars
+are converted into return-spliced continuous root series before testing.
+
+## Method
+
+The run compares the same z-score and Mahalanobis rules used in `HYP-0003`, with
+the same costs and turnover controls. The pair is still required to pass the
+same train-window selection filters before the test segment is evaluated.
+
+## Result
+
+The strict longer-window selection gate rejected `XAP-XAB`:
+
+| Pair | Selected | Reason | Observations | Train | Test | Return corr | Price corr | ADF p-value | Half-life bars |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| `XAP-XAB` | false | `spread_not_stationary` | 31,885 | 19,131 | 12,754 | 0.347 | 0.254 | 0.197 | 1513.4 |
+
+The strict ADF cutoff is `0.10`, so the longer training spread is not stationary
+enough under the original method.
+
+## Forced Diagnostic
+
+A separate `config_forced.yaml` run disabled selection so the same trading rules
+could still be inspected on the longer out-of-sample segment. This is diagnostic
+only.
+
+| Method | Gross return | Cost sum | Net return | Sharpe | Max drawdown | Active fraction | Turnover | Trades |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Z-score | 7.93% | 1.02% | 6.83% | 7.14 | -4.78% | 44.22% | 67.98 | 85 |
+| Z-score + Mahalanobis filter | 3.79% | 0.44% | 3.33% | 6.02 | -2.43% | 16.70% | 29.57 | 35 |
+| Mahalanobis | -2.42% | 2.69% | -5.01% | -3.95 | -7.28% | 63.07% | 179.23 | 205 |
+
+Splitting around the previous short-window test start:
+
+| Method | Segment | Gross return | Cost sum | Net return | Trades |
+|---|---|---:|---:|---:|---:|
+| Z-score | 2025-10-29 to 2026-04-08 | 5.34% | 0.76% | 4.55% | 61 |
+| Z-score | 2026-04-08 to 2026-06-18 | 2.45% | 0.26% | 2.18% | 24 |
+| Z-score + Mahalanobis filter | 2025-10-29 to 2026-04-08 | 2.83% | 0.38% | 2.44% | 30 |
+| Z-score + Mahalanobis filter | 2026-04-08 to 2026-06-18 | 0.94% | 0.07% | 0.87% | 5 |
+| Mahalanobis | 2025-10-29 to 2026-04-08 | -1.87% | 1.72% | -3.54% | 122 |
+| Mahalanobis | 2026-04-08 to 2026-06-18 | -0.57% | 0.97% | -1.53% | 83 |
+
+## Decision
+
+Revise. The strict longer-window test weakens the original short-window
+Mahalanobis claim. The z-score rule is more robust in the forced diagnostic. The
+hybrid lowers turnover and drawdown but gives up too much return at the current
+Mahalanobis threshold. The pair failed the stationarity gate, so this remains a
+research lead rather than a deployable strategy.

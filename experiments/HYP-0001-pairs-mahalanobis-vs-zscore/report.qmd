@@ -1,0 +1,49 @@
+---
+title: "HYP-0001: Mahalanobis Pairs Trading Versus Z-Score Pairs Trading"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+---
+
+## Purpose
+
+Compare a classic scalar spread z-score pairs strategy against a
+Mahalanobis-distance variant on selected intra-sector Databento 5-minute
+continuous futures pairs.
+
+The current configuration uses turnover controls: hourly signal checks,
+one-hour minimum holding period, one-hour cooldown after exit, and suppression
+of small target changes.
+
+This is an initial method-comparison report, not evidence of a tradable edge.
+
+## Results
+
+```{python}
+import json
+from pathlib import Path
+
+results_path = Path("results.json")
+if results_path.exists():
+    results = json.loads(results_path.read_text())
+    results["method_metrics"]
+else:
+    "Run `uv run quantlab run-pairs-experiment experiments/HYP-0001-pairs-mahalanobis-vs-zscore/config.yaml` first."
+```
+
+## Bias Review
+
+- The sample is short.
+- Pair filters are estimated on the training window, but many candidate pairs are
+  still screened, so multiple-testing risk remains high.
+- Liquidity, spread, funding, exchange fees, and contract-specific multipliers
+  are simplified into a single turnover cost.
+- The experiment compares methods; it does not validate live execution.
+
+## Decision
+
+Status: `revise`
+
+Next step: sensitivity tests across lookback, thresholds, and costs.

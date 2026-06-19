@@ -1,0 +1,39 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.pyright/
+.coverage
+htmlcov/
+dist/
+build/
+site/
+*.egg-info/
+
+# Research outputs
+mlruns/
+mlartifacts/
+mlflow.db
+mlflow.db-*
+experiments/**/*results.json
+experiments/**/*.parquet
+experiments/**/*pair_*.csv
+experiments/**/strict_*.json
+experiments/**/strict_*.csv
+reports/generated/
+notebooks/.ipynb_checkpoints/
+
+# Data policy: keep directory structure, do not commit raw or derived data.
+data/raw/**
+data/bronze/**
+data/silver/**
+data/features/**
+!data/**/.gitkeep
+!data/README.md
+
+# DVC storage/cache if initialized locally
+.dvc/cache/
+.dvc/tmp/

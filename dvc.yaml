@@ -1,0 +1,9 @@
+stages:
+  smoke_experiment:
+    cmd: uv run quantlab run-experiment experiments/HYP-0000-smoke/config.yaml
+    deps:
+      - experiments/HYP-0000-smoke/config.yaml
+      - src/quantlab
+    outs:
+      - experiments/HYP-0000-smoke/results.json:
+          cache: false

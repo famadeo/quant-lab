@@ -1,0 +1,40 @@
+---
+title: "{{EXPERIMENT_ID}}: {{TITLE}}"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+---
+
+## Hypothesis
+
+State the hypothesis and why it should exist before seeing results.
+
+## Method
+
+Describe universe, dates, features, signal, sizing, costs, and validation windows.
+
+## Results
+
+Load `results.json` and summarize the run metrics.
+
+```{python}
+import json
+from pathlib import Path
+
+results_path = Path("results.json")
+if results_path.exists():
+    results = json.loads(results_path.read_text())
+    results["metrics"]
+else:
+    "Run the experiment first."
+```
+
+## Bias Review
+
+Discuss lookahead, survivorship, multiple testing, liquidity, capacity, and regime risks.
+
+## Decision
+
+Reject, revise, paper trade, or archive.

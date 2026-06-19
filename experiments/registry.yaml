@@ -1,0 +1,26 @@
+experiments:
+  - id: HYP-0000-smoke
+    title: Synthetic moving-average smoke test
+    status: revise
+    owner: famadeo
+    notes: Environment validation only; not a trading claim.
+  - id: HYP-0001-pairs-mahalanobis-vs-zscore
+    title: Mahalanobis pairs trading versus z-score pairs trading
+    status: revise
+    owner: famadeo
+    notes: Initial Databento 5-minute intra-sector pairs method comparison.
+  - id: HYP-0002-equity-top100-pairs
+    title: Equity-only relative value branch
+    status: revise
+    owner: famadeo
+    notes: Strict equity-index futures baseline plus Databento top-100 US equity universe scaffold.
+  - id: HYP-0003-equity-futures-1m-pairs
+    title: GLBX 1-minute equity futures pairs
+    status: revise
+    owner: famadeo
+    notes: Broad GLBX equity-index futures screen using prepared continuous 1-minute data.
+  - id: HYP-0004-xap-xab-longer-1m
+    title: Longer-window XAP-XAB pairs robustness test
+    status: revise
+    owner: famadeo
+    notes: Pair-specific robustness test using 2024-2026 GLBX 1-minute sector futures data.

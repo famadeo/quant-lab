@@ -1,0 +1,74 @@
+experiment_id: HYP-0002-equity-top100-pairs
+title: Equity-only relative value branch
+hypothesis: >
+  Equity-only pairs may contain more idiosyncratic relative-value structure than
+  the cross-asset macro futures universe. The strict futures baseline uses the
+  locally available equity-index futures; the top-100 market-cap branch uses
+  Databento US equities rather than futures.
+
+data:
+  root_dir: /home/famadeo/research/databento-asset-browser/data/futures_5m
+  roots:
+    - ES
+    - NQ
+    - YM
+    - RTY
+    - NIY
+  asset_classes:
+    Equity: [ES, NQ, YM, RTY, NIY]
+  timestamp_column: ts
+  price_column: cont_logprice
+  return_column: cont_logret
+
+strategy:
+  pair_scope: intra_asset_class
+  lookback: 96
+  min_pair_observations: 500
+  z_entry: 2.0
+  z_exit: 0.5
+  mahalanobis_entry: 2.45
+  mahalanobis_exit: 1.0
+  covariance_ridge: 0.000001
+  signal_lag: 1
+  rebalance_every_bars: 12
+  min_holding_bars: 12
+  cooldown_bars: 12
+  min_position_change: 0.25
+
+selection:
+  enabled: true
+  train_fraction: 0.6
+  min_train_observations: 500
+  min_test_observations: 200
+  min_abs_return_correlation: 0.1
+  max_spread_adf_pvalue: 0.1
+  max_half_life_bars: 288
+  min_average_pair_volume: 10
+  adf_max_lag:
+
+backtest:
+  fee_bps: 0.5
+  slippage_bps: 1.0
+  periods_per_year: 69552
+
+outputs:
+  directory: .
+  results_file: results.json
+  pair_selection_file: pair_selection.csv
+  pair_metrics_file: pair_metrics.csv
+  portfolio_returns_file: portfolio_returns.parquet
+  pair_returns_file: pair_returns.parquet
+
+mlflow:
+  experiment_name: quant-lab-pairs
+  tracking_uri: sqlite:///mlflow.db
+
+tags:
+  workflow: equity-only-pairs
+  data_vendor: databento
+  bar_size: 5m
+  claim: none
+
+decision:
+  status: revise
+  notes: Strict equity-index futures baseline. Top-100 market-cap branch not run until billable Databento equity pull is explicitly allowed.

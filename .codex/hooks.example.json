@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run quantlab doctor --quiet",
+            "timeout": 30,
+            "statusMessage": "Checking Quant Lab environment"
+          }
+        ]
+      }
+    ]
+  }
+}

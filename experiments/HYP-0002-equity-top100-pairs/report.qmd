@@ -1,0 +1,33 @@
+---
+title: "HYP-0002 Top-100 US Equity Pairs"
+format: html
+---
+
+## Status
+
+This branch has two parts:
+
+- a strict futures-only baseline using locally available equity-index futures: `ES`, `NQ`, `YM`, `RTY`, and `NIY`;
+- a top-100 US equity universe scaffold ranked by Databento-derived market capitalization.
+
+## Guardrail
+
+The current futures cache contains only five equity-index futures roots. A top-100 market-cap universe is therefore an equities workflow unless a separate listed single-stock futures venue and mapping is introduced.
+
+## Strict Futures Baseline
+
+The local futures-only baseline selected 3 of 10 possible equity-index pairs:
+
+| Method | Total return | Sharpe | Turnover | Trades |
+|---|---:|---:|---:|---:|
+| Z-score | 2.20% | 7.73 | 39.82 | 66 |
+| Mahalanobis | -2.71% | -5.07 | 63.89 | 89 |
+
+The positive z-score result is from `NQ-NIY` and `ES-NIY`. Treat this as a branch worth expanding, not as evidence of a durable edge.
+
+## Next Steps
+
+1. Build `data/bronze/databento/top100_us_equities.csv`.
+2. Pull a small daily or 5-minute sample for the first 10 symbols.
+3. Check survivorship, symbol mapping, missing bars, spread stationarity, and trading-cost assumptions.
+4. Only then scale to all 100 symbols.

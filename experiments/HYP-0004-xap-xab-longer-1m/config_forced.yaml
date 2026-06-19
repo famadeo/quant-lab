@@ -1,0 +1,72 @@
+experiment_id: HYP-0004-xap-xab-longer-1m-forced
+title: Forced longer-window XAP-XAB pairs comparison
+hypothesis: >
+  Even if the longer XAP-XAB training spread fails the strict stationarity
+  selection gate, forcing the same z-score and Mahalanobis rules on the
+  out-of-sample segment can show whether the short-window profitability was
+  robust or regime-specific.
+
+data:
+  root_dir: /home/famadeo/quant-lab/data/silver/equity_futures_1m_xap_xab_2024_2026_continuous
+  roots:
+    - XAP
+    - XAB
+  asset_classes:
+    SectorIndex: [XAP, XAB]
+  timestamp_column: ts
+  price_column: cont_logprice
+  return_column: cont_logret
+
+strategy:
+  pair_scope: intra_asset_class
+  lookback: 390
+  min_pair_observations: 5000
+  z_entry: 2.0
+  z_exit: 0.5
+  mahalanobis_entry: 2.45
+  mahalanobis_exit: 1.0
+  covariance_ridge: 0.000001
+  signal_lag: 1
+  rebalance_every_bars: 30
+  min_holding_bars: 30
+  cooldown_bars: 30
+  min_position_change: 0.25
+
+selection:
+  enabled: false
+  train_fraction: 0.6
+  min_train_observations: 5000
+  min_test_observations: 2000
+  min_abs_return_correlation: 0.1
+  max_spread_adf_pvalue: 0.1
+  max_half_life_bars: 1950
+  min_average_pair_volume: 1
+  adf_max_lag: 30
+
+backtest:
+  fee_bps: 0.5
+  slippage_bps: 1.0
+  periods_per_year: 347760
+
+outputs:
+  directory: .
+  results_file: forced_results.json
+  pair_selection_file: forced_pair_selection.csv
+  pair_metrics_file: forced_pair_metrics.csv
+  portfolio_returns_file: forced_portfolio_returns.parquet
+  pair_returns_file: forced_pair_returns.parquet
+
+mlflow:
+  experiment_name: quant-lab-pairs
+  tracking_uri: sqlite:///mlflow.db
+
+tags:
+  workflow: xap-xab-longer-1m-forced
+  data_vendor: databento
+  dataset: GLBX.MDP3
+  bar_size: 1m
+  claim: none
+
+decision:
+  status: revise
+  notes: Forced backtest after strict longer-window selection failure. No trading claim.

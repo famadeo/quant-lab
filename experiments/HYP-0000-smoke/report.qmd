@@ -1,0 +1,33 @@
+---
+title: "HYP-0000-smoke: Synthetic moving-average smoke test"
+format:
+  html:
+    toc: true
+execute:
+  echo: false
+---
+
+## Purpose
+
+This report validates the mechanics of the Quant Lab workflow. It is not evidence
+of a tradable market edge.
+
+## Results
+
+```{python}
+import json
+from pathlib import Path
+
+results_path = Path("results.json")
+if results_path.exists():
+    results = json.loads(results_path.read_text())
+    results["metrics"]
+else:
+    "Run `uv run quantlab run-experiment experiments/HYP-0000-smoke/config.yaml` first."
+```
+
+## Decision
+
+Status: `revise`
+
+Use this experiment only as a regression check for the research environment.

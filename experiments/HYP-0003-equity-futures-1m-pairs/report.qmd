@@ -1,0 +1,63 @@
+---
+title: "HYP-0003 GLBX 1-Minute Equity Futures Pairs"
+format: html
+---
+
+## Status
+
+Initial run completed on 2026-06-19. Status: revise.
+
+## Data
+
+This experiment uses prepared continuous 1-minute root series from
+`data/silver/equity_futures_1m_continuous`, built from Databento `GLBX.MDP3`
+`ohlcv-1m` outright futures bars.
+
+## Universe
+
+The candidate set is split into major index, micro index, Japan index, and sector
+index groups. Pair selection and trading are restricted to pairs within each
+group.
+
+## Method
+
+The run compares the existing scalar spread z-score strategy against the
+Mahalanobis-distance strategy and a hybrid rule. The hybrid uses z-score for
+direction and exits, but only enters or reverses when the rolling Mahalanobis
+distance confirms a joint outlier.
+
+## Result
+
+The first run evaluated 73 pairs after minimum-observation filtering and selected
+4: `YM-EMD`, `NIY-MNI`, `XAF-XAU`, and `XAP-XAB`.
+
+| Method | Total return | Sharpe | Max drawdown | Active fraction | Turnover | Trades |
+|---|---:|---:|---:|---:|---:|---:|
+| Mahalanobis | -1.61% | -0.87 | -4.20% | 41.12% | 346.85 | 630 |
+| Z-score | -3.48% | -2.86 | -4.09% | 46.25% | 191.47 | 307 |
+| Z-score + Mahalanobis filter | 0.15% | 0.26 | -1.82% | 16.25% | 57.68 | 104 |
+
+Portfolio-level gross/cost decomposition:
+
+| Method | Gross compounded | Cost sum | Net compounded |
+|---|---:|---:|---:|
+| Mahalanobis | 3.64% | 5.20% | -1.61% |
+| Z-score | -0.67% | 2.87% | -3.48% |
+| Z-score + Mahalanobis filter | 1.02% | 0.87% | 0.15% |
+
+For `XAP-XAB`, the hybrid reduced turnover sharply but filtered out too much of
+the profitable short-window move:
+
+| Method | Gross return | Cost sum | Net return | Trades |
+|---|---:|---:|---:|---:|
+| Mahalanobis | 7.92% | 0.91% | 6.94% | 69 |
+| Z-score | 3.64% | 0.32% | 3.30% | 28 |
+| Z-score + Mahalanobis filter | 0.04% | 0.10% | -0.06% | 7 |
+
+The selected-pair count is too small for a durable trading claim.
+
+## Decision
+
+Revise. The next iteration should add contract-specific cost assumptions and test
+whether `XAP-XAB` survives alternative date splits and Mahalanobis filter
+thresholds.
