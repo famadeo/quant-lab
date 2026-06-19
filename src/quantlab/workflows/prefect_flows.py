@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 
 from quantlab.experiments import run_experiment
@@ -8,9 +9,12 @@ from quantlab.experiments import run_experiment
 def run_experiment_flow(config_path: str) -> object:
     """Run an experiment as a Prefect flow when Prefect is installed."""
     try:
-        from prefect import flow, task
+        prefect = importlib.import_module("prefect")
     except ImportError as exc:
         raise RuntimeError("Install workflow extras with `uv sync --extra workflow`.") from exc
+
+    flow = prefect.flow  # type: ignore[attr-defined]
+    task = prefect.task  # type: ignore[attr-defined]
 
     @task
     def execute(path: str) -> str:
