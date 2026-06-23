@@ -24,3 +24,38 @@ experiments:
     status: revise
     owner: famadeo
     notes: Pair-specific robustness test using 2024-2026 GLBX 1-minute sector futures data.
+  - id: HYP-0005-vol-clock-ofi
+    title: Volatility-clock low-size OFI predictive test
+    status: reject
+    owner: famadeo
+    notes: Low-size OFI failed the out-of-sample volatility-clock validation after costs.
+  - id: HYP-0006-macro-event-drift
+    title: Post-macro-event futures drift/reversal
+    status: reject
+    owner: famadeo
+    notes: Post-5-minute macro-event continuation/reversal lost money after costs.
+  - id: HYP-0007-vol-clock-impact-decay
+    title: Volatility-clock impact decay after extreme high-size OFI
+    status: reject
+    owner: famadeo
+    notes: Positive pooled net result but weak t-stat and only 40% positive roots.
+  - id: HYP-0008-cross-asset-residual-baskets
+    title: Cross-asset residual mean-reversion baskets
+    status: reject
+    owner: famadeo
+    notes: Positive OOS net return but below the preregistered t-stat threshold.
+  - id: HYP-0009-trend-flow-filter
+    title: Intraday trend following with flow confirmation
+    status: reject
+    owner: famadeo
+    notes: Flow-filtered intraday trend underperformed baseline after costs.
+  - id: HYP-0010-futures-carry-momentum
+    title: Futures carry plus momentum baseline
+    status: reject
+    owner: famadeo
+    notes: Carry, momentum, and combined daily portfolios were negative after costs.
+  - id: HYP-0011-expanded-metals-residual-basket
+    title: Expanded metals residual mean-reversion basket
+    status: revise
+    owner: famadeo
+    notes: Daily basket passed the initial OOS gate, drawdown controls favored GC/SI/HG/PL, and the 1-minute retest showed the gross signal is swamped by turnover costs.

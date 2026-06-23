@@ -21,6 +21,7 @@ mlflow.db-*
 experiments/**/*results.json
 experiments/**/*.parquet
 experiments/**/*pair_*.csv
+experiments/**/*returns.csv
 experiments/**/strict_*.json
 experiments/**/strict_*.csv
 reports/generated/

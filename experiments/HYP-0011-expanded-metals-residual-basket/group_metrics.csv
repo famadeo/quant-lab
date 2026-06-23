@@ -1,0 +1,2 @@
+group,label,observations,total_gross_return,total_cost_return,total_net_return,mean_net_bps,event_tstat,annualized_sharpe,hit_rate,max_drawdown
+Metals,Metals,985,0.4485372070668241,0.055039720155047676,0.39349748691177644,3.9948983442819945,1.8524900634784025,0.9369966588914457,0.531979695431472,-0.14916637895007415

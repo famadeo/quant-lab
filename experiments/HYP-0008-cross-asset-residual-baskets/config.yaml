@@ -1,0 +1,24 @@
+experiment:
+  id: HYP-0008-cross-asset-residual-baskets
+  title: Cross-asset residual mean-reversion baskets
+  owner: famadeo
+
+data:
+  continuous_dir: /home/famadeo/research/databento-asset-browser/data/futures_continuous
+
+universe:
+  roots: [6A, 6B, 6C, 6E, 6J, ES, NQ, GC, HG, SI, ZT, ZF, ZN, ZB]
+
+validation:
+  train_fraction: 0.70
+
+strategy:
+  lookback_days: 126
+  entry_z: 2.0
+  cost_bps_per_unit_turnover: 1.5
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65

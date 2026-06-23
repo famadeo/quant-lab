@@ -1,0 +1,3 @@
+universe,roots,start,end,record_count,billable_size_bytes,billable_size_gb,cost_usd
+full6,"GC,SI,HG,PL,PA,ALI",2016-06-22T00:00:00Z,2026-06-22T00:00:00Z,32984232,1847116992,1.847116992,0.0
+core4,"GC,SI,HG,PL",2016-06-22T00:00:00Z,2026-06-22T00:00:00Z,30752050,1722114800,1.7221148,0.0

@@ -1,0 +1,25 @@
+experiment:
+  id: HYP-0011-expanded-metals-residual-basket
+  title: Expanded metals residual mean-reversion basket
+  owner: famadeo
+
+data:
+  continuous_dir: /home/famadeo/research/databento-asset-browser/data/futures_continuous
+  start: "2014-05-06"
+
+universe:
+  roots: [GC, SI, HG, PL, PA, ALI]
+
+validation:
+  train_fraction: 0.70
+
+strategy:
+  lookback_days: 126
+  entry_z: 2.0
+  cost_bps_per_unit_turnover: 1.5
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65

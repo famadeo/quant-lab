@@ -1,0 +1,27 @@
+experiment:
+  id: HYP-0006-macro-event-drift
+  title: Post-macro-event futures drift/reversal
+  owner: famadeo
+
+data:
+  event_features_path: /home/famadeo/research/databento-asset-browser/data/event_features_phase1.parquet
+
+universe:
+  roots: [ZT, ZF, ZN, ZB, SR3, ES, NQ, 6E, 6J, CL]
+  releases: [nfp, cpi, ppi, retail, pce, fomc, ism_mfg, ism_svc, claims]
+
+validation:
+  train_fraction: 0.60
+  min_test_observations: 8
+
+strategy:
+  observation_window: event_to_5m
+  target_window: 5m_to_60m
+  round_trip_cost_bps: 3.0
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65
+  min_positive_roots: 0.60

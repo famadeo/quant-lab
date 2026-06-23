@@ -1,0 +1,30 @@
+experiment:
+  id: HYP-0009-trend-flow-filter
+  title: Intraday trend following with flow confirmation
+  owner: famadeo
+
+data:
+  continuous_5m_dir: /home/famadeo/research/databento-asset-browser/data/futures_5m
+  flow_5m_dir: /home/famadeo/research/databento-asset-browser/data/trades
+  rth_start: "13:30"
+  rth_end: "20:00"
+
+universe:
+  roots: [SR3, ZT, ZF, ZN, ZB, ES, NQ, YM, RTY, 6E, 6J, 6B, 6C, 6A, CL, BZ, GC, SI]
+
+validation:
+  train_fraction_dates: 0.60
+  min_observations: 300
+
+strategy:
+  trend_lookback_bars: 12
+  trend_quantile: 0.60
+  volume_quantile: 0.50
+  cost_bps_per_unit_turnover: 1.5
+  primary_method: flow_filtered_trend
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65

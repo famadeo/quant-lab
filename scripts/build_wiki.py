@@ -50,19 +50,23 @@ def _build_experiment(entry: dict[str, Any]) -> dict[str, Any]:
         if (experiment_dir / "config.yaml").exists()
         else {}
     )
+    experiment_meta = config.get("experiment") if isinstance(config.get("experiment"), dict) else {}
+    hypothesis_text = _load_hypothesis(config, experiment_dir)
     result_files = _load_result_files(experiment_dir)
     strict_selection = _load_json_if_exists(experiment_dir / "strict_selection.json")
     decision = _latest_decision(config, result_files, entry)
     return {
         "id": experiment_id,
-        "title": str(config.get("title") or entry.get("title") or experiment_id),
-        "conceptual_description": str(
-            config.get("conceptual_description")
-            or entry.get("conceptual_description")
-            or "No conceptual description recorded."
+        "title": str(
+            config.get("title")
+            or experiment_meta.get("title")
+            or entry.get("title")
+            or experiment_id
         ),
+        "hypothesis": hypothesis_text,
+        "conceptual_description": _conceptual_description(config, entry, hypothesis_text),
         "status": str(decision.get("status") or entry.get("status") or "unknown"),
-        "owner": str(entry.get("owner") or ""),
+        "owner": str(entry.get("owner") or experiment_meta.get("owner") or ""),
         "notes": str(decision.get("notes") or entry.get("notes") or ""),
         "config": config,
         "result_files": result_files,
@@ -75,7 +79,7 @@ def _load_result_files(experiment_dir: Path) -> list[dict[str, Any]]:
     results = []
     for path in sorted(experiment_dir.glob("*results.json")):
         payload = _load_json_if_exists(path)
-        if payload:
+        if payload and _has_publishable_result(payload):
             label = "primary" if path.name == "results.json" else path.stem.replace("_", " ")
             results.append({"label": label, "path": path, "payload": payload})
     return results
@@ -183,7 +187,7 @@ def _render_experiment_page(experiment: dict[str, Any]) -> str:
         "",
         "## Hypothesis",
         "",
-        str(config.get("hypothesis") or "No hypothesis recorded.").strip(),
+        str(experiment["hypothesis"] or "No hypothesis recorded.").strip(),
         "",
         "## Conceptual Description",
         "",
@@ -224,21 +228,46 @@ def _render_experiment_page(experiment: dict[str, Any]) -> str:
 
 def _render_design(config: dict[str, Any]) -> list[str]:
     data = config.get("data") if isinstance(config.get("data"), dict) else {}
+    universe = config.get("universe") if isinstance(config.get("universe"), dict) else {}
+    validation = config.get("validation") if isinstance(config.get("validation"), dict) else {}
     strategy = config.get("strategy") if isinstance(config.get("strategy"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
     backtest = config.get("backtest") if isinstance(config.get("backtest"), dict) else {}
-    roots = data.get("roots") if isinstance(data, dict) else []
+    roots = (
+        data.get("roots") or universe.get("roots")
+        if isinstance(data, dict)
+        else universe.get("roots")
+    )
     asset_classes = data.get("asset_classes") if isinstance(data, dict) else {}
+    lookback = (
+        strategy.get("lookback")
+        or strategy.get("lookback_bars")
+        or strategy.get("lookback_days")
+        or strategy.get("momentum_lookback_days")
+        or "n/a"
+    )
+    cost_bps = (
+        backtest.get("fee_bps")
+        or strategy.get("cost_bps_per_unit_turnover")
+        or strategy.get("round_trip_cost_bps")
+        or "n/a"
+    )
+    train_fraction = (
+        selection.get("train_fraction")
+        or validation.get("train_fraction")
+        or validation.get("train_fraction_dates")
+        or "n/a"
+    )
     lines = [
         f"- Roots: {_format_list(roots)}",
         f"- Asset groups: {_format_asset_classes(asset_classes)}",
         f"- Pair scope: `{strategy.get('pair_scope', 'n/a')}`",
-        f"- Lookback: `{strategy.get('lookback', 'n/a')}` bars",
+        f"- Lookback: `{lookback}` bars",
         f"- Signal lag: `{strategy.get('signal_lag', 'n/a')}` bars",
         f"- Rebalance interval: `{strategy.get('rebalance_every_bars', 'n/a')}` bars",
         f"- Selection enabled: `{selection.get('enabled', 'n/a')}`",
-        f"- Train fraction: `{selection.get('train_fraction', 'n/a')}`",
-        f"- Fee bps: `{backtest.get('fee_bps', 'n/a')}`",
+        f"- Train fraction: `{train_fraction}`",
+        f"- Fee bps: `{cost_bps}`",
         f"- Slippage bps: `{backtest.get('slippage_bps', 'n/a')}`",
     ]
     return lines
@@ -280,6 +309,8 @@ def _render_result_section(label: str, payload: dict[str, Any]) -> list[str]:
         lines.extend(_render_metrics_table(metrics))
     elif isinstance(payload.get("metrics"), dict):
         lines.extend(_render_single_metrics_table(payload["metrics"]))
+    else:
+        lines.append("No publishable method-level metrics were available in this result artifact.")
     selection_reasons = payload.get("selection_reasons")
     if isinstance(selection_reasons, dict) and selection_reasons:
         lines.extend(["", "### Selection Reasons", "", *_render_key_value_table(selection_reasons)])
@@ -361,6 +392,10 @@ def _method_metrics(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return metrics if isinstance(metrics, dict) else {}
 
 
+def _has_publishable_result(payload: dict[str, Any]) -> bool:
+    return bool(_method_metrics(payload)) or isinstance(payload.get("metrics"), dict)
+
+
 def _best_result(result_files: list[dict[str, Any]]) -> dict[str, Any] | None:
     candidates = []
     for result_file in result_files:
@@ -432,6 +467,61 @@ def _brief_description(value: str, limit: int = 180) -> str:
     if len(summary) <= limit:
         return summary
     return summary[: limit - 3].rstrip() + "..."
+
+
+def _load_hypothesis(config: dict[str, Any], experiment_dir: Path) -> str:
+    configured = config.get("hypothesis")
+    if isinstance(configured, str) and configured.strip():
+        return configured.strip()
+    hypothesis_path = experiment_dir / "hypothesis.md"
+    if hypothesis_path.exists():
+        return _strip_redundant_hypothesis_headings(
+            hypothesis_path.read_text(encoding="utf-8")
+        ).strip()
+    return ""
+
+
+def _conceptual_description(
+    config: dict[str, Any],
+    entry: dict[str, Any],
+    hypothesis_text: str,
+) -> str:
+    configured = config.get("conceptual_description") or entry.get("conceptual_description")
+    if isinstance(configured, str) and configured.strip():
+        return configured.strip()
+    summary = _first_body_paragraph(hypothesis_text)
+    return summary or "No conceptual description recorded."
+
+
+def _first_body_paragraph(markdown: str) -> str:
+    paragraphs = []
+    current: list[str] = []
+    for raw_line in markdown.splitlines():
+        line = raw_line.strip()
+        if not line:
+            if current:
+                paragraphs.append(" ".join(current))
+                current = []
+            continue
+        if line.startswith("#") or line.startswith("- ") or line[0:2].isdigit():
+            continue
+        current.append(line)
+    if current:
+        paragraphs.append(" ".join(current))
+    return paragraphs[0] if paragraphs else ""
+
+
+def _strip_redundant_hypothesis_headings(markdown: str) -> str:
+    lines = markdown.splitlines()
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    if lines and lines[0].startswith("# "):
+        lines.pop(0)
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    if lines and lines[0].strip().lower() == "## hypothesis":
+        lines.pop(0)
+    return "\n".join(lines)
 
 
 def _escape_table(value: str) -> str:

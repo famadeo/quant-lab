@@ -1,0 +1,2 @@
+schema,roots,start,end,record_count,billable_size_bytes,billable_size_gb,cost_usd
+trades,"GC,SI,HG,PL,PA,ALI",2025-06-22T00:00:00Z,2026-06-22T00:00:00Z,65054217,3122602416,3.122602416,0.0

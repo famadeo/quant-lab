@@ -1,0 +1,24 @@
+experiment:
+  id: HYP-0007-vol-clock-impact-decay
+  title: Volatility-clock impact decay after extreme high-size OFI
+  owner: famadeo
+
+data:
+  volatility_bars_path: experiments/HYP-0005-vol-clock-ofi/volatility_bars.parquet
+
+universe:
+  roots: [SR3, ZT, ZB, CL, RTY]
+
+validation:
+  train_fraction_dates: 0.60
+
+strategy:
+  extreme_quantile: 0.80
+  round_trip_cost_bps: 3.0
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65
+  min_positive_roots: 0.60

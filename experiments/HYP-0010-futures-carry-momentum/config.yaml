@@ -1,0 +1,25 @@
+experiment:
+  id: HYP-0010-futures-carry-momentum
+  title: Futures carry plus momentum baseline
+  owner: famadeo
+
+data:
+  continuous_dir: /home/famadeo/research/databento-asset-browser/data/futures_continuous
+  raw_daily_dir: /home/famadeo/research/databento-asset-browser/data/futures_daily
+
+universe:
+  roots: [6A, 6B, 6C, 6E, 6J, CL, ES, GC, HG, NQ, SI, ZT, ZF, ZN, ZB]
+
+validation:
+  train_fraction: 0.70
+
+strategy:
+  momentum_lookback_days: 252
+  cost_bps_per_unit_turnover: 1.5
+  primary_method: combined
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_net_return: 0.0
+  min_event_tstat: 1.65

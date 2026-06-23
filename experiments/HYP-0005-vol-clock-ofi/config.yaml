@@ -1,0 +1,49 @@
+experiment:
+  id: HYP-0005-vol-clock-ofi
+  title: Volatility-clock low-size OFI predictive test
+  owner: famadeo
+
+data:
+  source: Databento GLBX.MDP3 cached 5-minute returns and raw trades
+  start: "2026-05-17T00:00:00Z"
+  end: "2026-06-17T00:00:00Z"
+  rth_start: "13:30"
+  rth_end: "20:00"
+  databento_asset_browser_src: /home/famadeo/research/databento-asset-browser/src
+  raw_trades_dir: /home/famadeo/research/databento-asset-browser/data/trades/_raw
+
+universe:
+  roots:
+    - SR3
+    - ZT
+    - ZB
+    - CL
+    - RTY
+
+validation:
+  train_fraction_dates: 0.60
+  min_train_observations: 20
+  min_test_observations: 10
+
+trade_size_buckets:
+  low_quantile: 0.10
+  high_quantile: 0.90
+
+volatility_clock:
+  target_avg_5m_bars: 6
+
+strategy:
+  features:
+    - ofi_low
+    - ofi_high
+    - ofi_spread
+  primary_feature: ofi_low
+  feature_clip_abs: 1.0
+  cost_bps_per_unit_turnover: 1.5
+
+decision_rules:
+  pass_status: revise
+  fail_status: reject
+  min_pooled_net_return: 0.0
+  min_pooled_event_tstat: 1.65
+  min_positive_root_fraction: 0.60
