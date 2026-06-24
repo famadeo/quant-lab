@@ -1,0 +1,42 @@
+experiment:
+  id: HYP-0013-metals-flow-filtered-residual-reversion
+  title: Flow-filtered metals residual mean-reversion strategy
+  owner: famadeo
+
+data:
+  start: "2025-06-22T22:00:00Z"
+  end: "2026-06-22T00:00:00Z"
+  trade_dir: /home/famadeo/research/databento-asset-browser/data/metals_trades_12m/outright
+  mbp1_dir: /home/famadeo/research/databento-asset-browser/data/metals_mbp1_30d/outright_chunks
+  cache_dir: /home/famadeo/quant-lab/data/features/metals_flow_filtered_residual_reversion
+
+universe:
+  roots: [GC, SI, HG, PL, PA, ALI]
+  core_roots: [GC, SI, HG, PL, PA]
+  isolated_roots: [ALI]
+
+research:
+  thresholds: [100000000, 250000000, 500000000, 1000000000]
+  primary_threshold: 250000000
+  horizons: [1, 2, 5, 10, 20, 50]
+  rolling_window: 1000
+  min_periods: 500
+  ewma_halflife: 500
+  fair_value_lookback: 2000
+  fair_value_min_periods: 1000
+
+strategy:
+  entry_z: 2.0
+  exit_z: 0.25
+  stop_z: 5.0
+  md_quantile: 0.90
+  large_small_quantile: 0.70
+  validation_horizon: 20
+  cost_fallback_bps: 1.5
+  cost_multipliers: [0.0, 1.0, 2.0, 3.0]
+  train_fraction: 0.70
+  embargo_bars: 50
+  bootstrap_iterations: 2000
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0013-metals-flow-filtered-residual-reversion

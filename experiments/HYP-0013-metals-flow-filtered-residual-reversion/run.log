@@ -1,0 +1,17 @@
+building sorted core trade cache
+building threshold bars with streaming builder
+  threshold 100,000,000: 288,060 bars
+  threshold 250,000,000: 115,650 bars
+  threshold 500,000,000: 57,898 bars
+  threshold 1,000,000,000: 28,968 bars
+building primary bars, prices, and size disagreement
+computing features and residuals
+running strategy and validation
+/home/famadeo/quant-lab/src/quantlab/metals_flow/strategy.py:236: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+/home/famadeo/quant-lab/scripts/run_metals_flow_filtered_residual_strategy.py:794: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  frame["month"] = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+writing artifacts
+/home/famadeo/quant-lab/scripts/run_metals_flow_filtered_residual_strategy.py:993: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month=pd.to_datetime(bars["end_ts"], utc=True).dt.to_period("M").astype(str)
+wrote /home/famadeo/quant-lab/experiments/HYP-0013-metals-flow-filtered-residual-reversion/results.json

@@ -16,3 +16,7 @@ This page aggregates publishable method-level metrics. It is not a promotion lis
 | [HYP-0004-xap-xab-longer-1m](../experiments/HYP-0004-xap-xab-longer-1m.md) | forced results | Mahalanobis | -5.01% | -3.95 | -7.28% | 205 |
 | [HYP-0004-xap-xab-longer-1m](../experiments/HYP-0004-xap-xab-longer-1m.md) | forced results | Z-score | 6.83% | 7.14 | -4.78% | 85 |
 | [HYP-0004-xap-xab-longer-1m](../experiments/HYP-0004-xap-xab-longer-1m.md) | forced results | Z-score + Mahalanobis filter | 3.33% | 6.02 | -2.43% | 35 |
+| [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_0.0 | 170.23% | 5.98 | -6.81% |  |
+| [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_1.0 | 154.62% | 5.44 | -6.98% |  |
+| [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_2.0 | 139.00% | 4.90 | -7.15% |  |
+| [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_3.0 | 123.39% | 4.36 | -7.32% |  |

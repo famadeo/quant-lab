@@ -1,0 +1,2 @@
+root,trades,start_ts,end_ts,notional,signed_ratio,median_trade_notional,p99_trade_notional
+ALI,112563,2025-06-23 00:10:43.178975+00:00,2026-06-21 23:50:52.149488+00:00,19757275462.5,0.006047565881580369,81512.5,750437.5

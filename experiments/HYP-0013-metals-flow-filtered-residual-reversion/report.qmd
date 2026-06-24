@@ -1,0 +1,35 @@
+---
+title: "HYP-0013 Metals Flow-Filtered Residual Reversion"
+format: html
+---
+
+## Status
+
+Status: `research_pass`.
+
+## Run
+
+```bash
+uv run python scripts/run_metals_flow_filtered_residual_strategy.py \
+  experiments/HYP-0013-metals-flow-filtered-residual-reversion/config.yaml
+```
+
+## Outputs
+
+- `results.json`
+- `variants.csv`
+- `selected_returns.parquet`
+- `positions.parquet`
+- `monthly_returns.csv`
+- `split_metrics.csv`
+- `bootstrap.csv`
+- `ic_fdr.csv`
+- `monthly_ic.csv`
+- `cost_estimates.csv`
+- `plots/`
+
+## Notes
+
+This is a research result, not a production trading recommendation. The result
+should be stress-tested with stricter execution assumptions, contract-roll
+handling, capital constraints, and independent forward data before paper trading.

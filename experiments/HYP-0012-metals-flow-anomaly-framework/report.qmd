@@ -1,0 +1,41 @@
+---
+title: "HYP-0012 Metals Cross-Sectional Flow Anomaly Framework"
+format: html
+---
+
+## Status
+
+Status: `research`.
+
+This experiment builds the reusable research harness for cross-sectional metals
+flow anomaly analysis. It is not a production strategy or paper-trading
+recommendation.
+
+## Run
+
+```bash
+uv run python scripts/run_metals_flow_research.py \
+  experiments/HYP-0012-metals-flow-anomaly-framework/config.yaml
+```
+
+## Artifacts
+
+Primary outputs are written to this experiment directory:
+
+- `results.json`
+- `threshold_summary.csv`
+- `flow_features.parquet`
+- `flow_anomalies.parquet`
+- `forward_studies.csv`
+- `information_coefficients.csv`
+- `signal_classification.csv`
+- `cointegration.csv`
+- `trade_size_summary.csv`
+- `trade_size_disagreement.parquet`
+- `plots/`
+
+## Interpretation
+
+Use the accompanying exploration notebook for visual inspection. A statistically
+robust trading conclusion requires the later strategy layer to include execution
+costs, liquidity constraints, subperiod stability, and out-of-sample validation.

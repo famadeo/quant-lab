@@ -311,6 +311,9 @@ def _render_result_section(label: str, payload: dict[str, Any]) -> list[str]:
         lines.extend(_render_single_metrics_table(payload["metrics"]))
     else:
         lines.append("No publishable method-level metrics were available in this result artifact.")
+    summary = payload.get("summary")
+    if isinstance(summary, dict) and summary:
+        lines.extend(["", "### Summary Highlights", "", *_render_summary_highlights(summary)])
     selection_reasons = payload.get("selection_reasons")
     if isinstance(selection_reasons, dict) and selection_reasons:
         lines.extend(["", "### Selection Reasons", "", *_render_key_value_table(selection_reasons)])
@@ -389,26 +392,72 @@ def _render_top_pairs(top_pairs: list[dict[str, Any]], limit: int = 10) -> list[
 
 def _method_metrics(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
     metrics = payload.get("method_metrics")
-    return metrics if isinstance(metrics, dict) else {}
+    if isinstance(metrics, dict):
+        return metrics
+    summary = payload.get("summary")
+    if not isinstance(summary, dict):
+        return {}
+
+    variants = summary.get("cost_variants")
+    if isinstance(variants, list) and variants:
+        out: dict[str, dict[str, Any]] = {}
+        for row in variants:
+            if not isinstance(row, dict):
+                continue
+            method = str(row.get("variant") or row.get("cost_multiplier") or "strategy")
+            observations = row.get("observations")
+            active_bars = row.get("active_bars")
+            out[method] = {
+                "total_return": row.get("net_return"),
+                "sharpe_ratio": row.get("annualized_sharpe"),
+                "max_drawdown": row.get("max_drawdown"),
+                "active_fraction": _safe_ratio(active_bars, observations),
+                "total_turnover": row.get("turnover"),
+                "trades": row.get("execution_legs") or row.get("trades"),
+            }
+        return out
+
+    selected = summary.get("selected_strategy_metrics")
+    if isinstance(selected, dict):
+        observations = selected.get("observations")
+        active_bars = selected.get("active_bars")
+        return {
+            "selected_strategy": {
+                "total_return": selected.get("net_return"),
+                "sharpe_ratio": selected.get("annualized_sharpe"),
+                "max_drawdown": selected.get("max_drawdown"),
+                "active_fraction": _safe_ratio(active_bars, observations),
+                "total_turnover": selected.get("turnover"),
+                "trades": selected.get("execution_legs") or selected.get("trades"),
+            }
+        }
+    return {}
 
 
 def _has_publishable_result(payload: dict[str, Any]) -> bool:
-    return bool(_method_metrics(payload)) or isinstance(payload.get("metrics"), dict)
+    return (
+        bool(_method_metrics(payload))
+        or isinstance(payload.get("metrics"), dict)
+        or isinstance(payload.get("summary"), dict)
+    )
 
 
 def _best_result(result_files: list[dict[str, Any]]) -> dict[str, Any] | None:
     candidates = []
+    costed_candidates = []
     for result_file in result_files:
         for method, metrics in _method_metrics(result_file["payload"]).items():
             if isinstance(metrics, dict) and isinstance(metrics.get("total_return"), int | float):
-                candidates.append(
-                    {
-                        "method": method,
-                        "total_return": float(metrics["total_return"]),
-                        "label": result_file["label"],
-                    }
-                )
-    return max(candidates, key=lambda row: row["total_return"]) if candidates else None
+                row = {
+                    "method": method,
+                    "total_return": float(metrics["total_return"]),
+                    "label": result_file["label"],
+                }
+                candidates.append(row)
+                if str(method) != "cost_0.0":
+                    costed_candidates.append(row)
+    ranked = costed_candidates or candidates
+    return max(ranked, key=lambda row: row["total_return"]) if ranked else None
 
 
 def _format_asset_classes(asset_classes: Any) -> str:
@@ -436,6 +485,43 @@ def _format_metric_value(value: Any) -> str:
     if isinstance(value, float):
         return _format_number(value)
     return _escape_table(str(value))
+
+
+def _render_summary_highlights(summary: dict[str, Any]) -> list[str]:
+    selected = summary.get("selected_strategy_metrics")
+    highlights: dict[str, Any] = {
+        "start": summary.get("start"),
+        "end": summary.get("end"),
+        "primary_complete_bars": summary.get("primary_complete_bars"),
+        "trade_rows": summary.get("trade_rows"),
+        "filter_pass_rate": summary.get("filter_pass_rate"),
+        "fdr_significant_tests": summary.get("fdr_significant_tests"),
+        "cointegration_pairs_p_lt_0_05": summary.get("cointegration_pairs_p_lt_0_05"),
+    }
+    if isinstance(selected, dict):
+        highlights.update(
+            {
+                "selected_net_return": selected.get("net_return"),
+                "selected_gross_to_cost": selected.get("gross_to_cost"),
+                "selected_tstat": selected.get("tstat"),
+                "selected_max_drawdown": selected.get("max_drawdown"),
+                "selected_active_bars": selected.get("active_bars"),
+                "selected_turnover": selected.get("turnover"),
+            }
+        )
+    rows = ["| Metric | Value |", "|---|---:|"]
+    for key, value in highlights.items():
+        if value is not None:
+            rows.append(f"| `{_escape_table(key)}` | {_format_metric_value(value)} |")
+    return rows
+
+
+def _safe_ratio(numerator: Any, denominator: Any) -> float | None:
+    if not isinstance(numerator, int | float) or not isinstance(denominator, int | float):
+        return None
+    if denominator == 0:
+        return None
+    return float(numerator) / float(denominator)
 
 
 def _format_percent(value: Any) -> str:
