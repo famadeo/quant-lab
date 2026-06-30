@@ -34,23 +34,31 @@ def reconstruct_z(panel, target_months, min_volume, lookback):
     return result
 
 
-def _variant_params(strategy_metrics, variant_name):
-    row = strategy_metrics[strategy_metrics["variant"].str.startswith(variant_name + "_")]
-    row = row[row["cost_multiplier"] == 1.0].iloc[0]
-    return {k: row[k] for k in ["target_months", "min_volume", "lookback", "entry_z", "exit_z"]}
+def _best_variant_params(strategy_metrics, variant_name):
+    # The lab defines "best variant" as the cost_multiplier==1.0 row with the
+    # maximum net_return among the short-name's full-variant strings. Selecting
+    # by max net_return is deterministic and pins a single full variant.
+    rows = strategy_metrics[
+        strategy_metrics["variant"].str.startswith(variant_name + "_")
+        & (strategy_metrics["cost_multiplier"] == 1.0)
+    ]
+    row = rows.loc[rows["net_return"].idxmax()]
+    keys = ["target_months", "min_volume", "lookback", "entry_z", "exit_z"]
+    params = {k: row[k] for k in keys}
+    params["variant"] = row["variant"]
+    return params
 
 
 def load_variant(source_dir, variant_name):
     panel = pd.read_parquet(source_dir / "curve_panel.parquet")
     sm = pd.read_csv(source_dir / "strategy_metrics.csv")
-    p = _variant_params(sm, variant_name)
+    p = _best_variant_params(sm, variant_name)
     zpanel = reconstruct_z(
         panel, int(p["target_months"]), float(p["min_volume"]), int(p["lookback"])
     )
     events = pd.read_csv(source_dir / "event_log.csv", parse_dates=["entry_date", "exit_date"])
-    lb_tag = f"_lb{int(p['lookback'])}_"
-    events = events[events["variant"].str.startswith(variant_name + "_")
-                    & events["variant"].str.contains(lb_tag, regex=False)
-                    & (events["cost_multiplier"] == 1.0)].copy()
+    events = events[
+        (events["variant"] == p["variant"]) & (events["cost_multiplier"] == 1.0)
+    ].copy()
     zpanel["date"] = pd.to_datetime(zpanel["date"])
     return zpanel, events, p
