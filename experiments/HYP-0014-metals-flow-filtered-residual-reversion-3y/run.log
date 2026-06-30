@@ -1,0 +1,97 @@
+building sorted core trade cache
+building threshold bars with streaming builder
+    threshold 100,000,000: processed 2,000,000 trades, 5,854 bars, available_mem=12.4 GiB
+    threshold 100,000,000: processed 10,000,000 trades, 29,763 bars, available_mem=12.3 GiB
+    threshold 100,000,000: processed 20,000,000 trades, 59,446 bars, available_mem=12.3 GiB
+    threshold 100,000,000: processed 30,000,000 trades, 89,679 bars, available_mem=12.4 GiB
+    threshold 100,000,000: processed 40,000,000 trades, 121,826 bars, available_mem=12.3 GiB
+    threshold 100,000,000: processed 50,000,000 trades, 153,063 bars, available_mem=12.3 GiB
+    threshold 100,000,000: processed 60,000,000 trades, 185,998 bars, available_mem=12.2 GiB
+    threshold 100,000,000: processed 70,000,000 trades, 220,451 bars, available_mem=12.2 GiB
+    threshold 100,000,000: processed 80,000,000 trades, 256,130 bars, available_mem=12.2 GiB
+    threshold 100,000,000: processed 90,000,000 trades, 295,502 bars, available_mem=12.0 GiB
+    threshold 100,000,000: processed 100,000,000 trades, 335,747 bars, available_mem=12.0 GiB
+    threshold 100,000,000: processed 110,000,000 trades, 382,403 bars, available_mem=11.7 GiB
+    threshold 100,000,000: processed 120,000,000 trades, 431,039 bars, available_mem=11.5 GiB
+    threshold 100,000,000: processed 130,000,000 trades, 480,633 bars, available_mem=11.3 GiB
+    threshold 100,000,000: processed 140,000,000 trades, 537,686 bars, available_mem=11.1 GiB
+    threshold 100,000,000: processed 150,000,000 trades, 587,748 bars, available_mem=11.1 GiB
+  threshold 100,000,000: 603,411 bars
+    threshold 250,000,000: processed 2,000,000 trades, 2,348 bars, available_mem=12.2 GiB
+    threshold 250,000,000: processed 10,000,000 trades, 11,936 bars, available_mem=12.1 GiB
+    threshold 250,000,000: processed 20,000,000 trades, 23,841 bars, available_mem=11.8 GiB
+    threshold 250,000,000: processed 30,000,000 trades, 35,969 bars, available_mem=12.0 GiB
+    threshold 250,000,000: processed 40,000,000 trades, 48,864 bars, available_mem=11.9 GiB
+    threshold 250,000,000: processed 50,000,000 trades, 61,390 bars, available_mem=12.0 GiB
+    threshold 250,000,000: processed 60,000,000 trades, 74,601 bars, available_mem=11.9 GiB
+    threshold 250,000,000: processed 70,000,000 trades, 88,422 bars, available_mem=12.0 GiB
+    threshold 250,000,000: processed 80,000,000 trades, 102,740 bars, available_mem=11.8 GiB
+    threshold 250,000,000: processed 90,000,000 trades, 118,545 bars, available_mem=11.9 GiB
+    threshold 250,000,000: processed 100,000,000 trades, 134,695 bars, available_mem=11.7 GiB
+    threshold 250,000,000: processed 110,000,000 trades, 153,428 bars, available_mem=11.8 GiB
+    threshold 250,000,000: processed 120,000,000 trades, 172,967 bars, available_mem=11.7 GiB
+    threshold 250,000,000: processed 130,000,000 trades, 192,877 bars, available_mem=11.7 GiB
+    threshold 250,000,000: processed 140,000,000 trades, 215,789 bars, available_mem=11.6 GiB
+    threshold 250,000,000: processed 150,000,000 trades, 235,878 bars, available_mem=11.6 GiB
+  threshold 250,000,000: 242,163 bars
+    threshold 500,000,000: processed 2,000,000 trades, 1,174 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 10,000,000 trades, 5,973 bars, available_mem=12.0 GiB
+    threshold 500,000,000: processed 20,000,000 trades, 11,931 bars, available_mem=11.8 GiB
+    threshold 500,000,000: processed 30,000,000 trades, 18,000 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 40,000,000 trades, 24,455 bars, available_mem=11.8 GiB
+    threshold 500,000,000: processed 50,000,000 trades, 30,723 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 60,000,000 trades, 37,336 bars, available_mem=11.9 GiB
+    threshold 500,000,000: processed 70,000,000 trades, 44,253 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 80,000,000 trades, 51,419 bars, available_mem=11.9 GiB
+    threshold 500,000,000: processed 90,000,000 trades, 59,330 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 100,000,000 trades, 67,415 bars, available_mem=11.9 GiB
+    threshold 500,000,000: processed 110,000,000 trades, 76,793 bars, available_mem=12.1 GiB
+    threshold 500,000,000: processed 120,000,000 trades, 86,575 bars, available_mem=11.9 GiB
+    threshold 500,000,000: processed 130,000,000 trades, 96,543 bars, available_mem=12.0 GiB
+    threshold 500,000,000: processed 140,000,000 trades, 108,014 bars, available_mem=11.8 GiB
+    threshold 500,000,000: processed 150,000,000 trades, 118,070 bars, available_mem=12.0 GiB
+  threshold 500,000,000: 121,215 bars
+    threshold 1,000,000,000: processed 2,000,000 trades, 587 bars, available_mem=12.1 GiB
+    threshold 1,000,000,000: processed 10,000,000 trades, 2,988 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 20,000,000 trades, 5,968 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 30,000,000 trades, 9,004 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 40,000,000 trades, 12,233 bars, available_mem=11.7 GiB
+    threshold 1,000,000,000: processed 50,000,000 trades, 15,368 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 60,000,000 trades, 18,676 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 70,000,000 trades, 22,136 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 80,000,000 trades, 25,722 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 90,000,000 trades, 29,679 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 100,000,000 trades, 33,724 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 110,000,000 trades, 38,416 bars, available_mem=12.0 GiB
+    threshold 1,000,000,000: processed 120,000,000 trades, 43,312 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 130,000,000 trades, 48,299 bars, available_mem=11.9 GiB
+    threshold 1,000,000,000: processed 140,000,000 trades, 54,038 bars, available_mem=11.8 GiB
+    threshold 1,000,000,000: processed 150,000,000 trades, 59,069 bars, available_mem=11.9 GiB
+  threshold 1,000,000,000: 60,643 bars
+building primary bars, prices, and size disagreement
+    threshold 250,000,000: processed 2,000,000 trades, 2,348 bars, available_mem=11.8 GiB
+    threshold 250,000,000: processed 10,000,000 trades, 11,936 bars, available_mem=11.6 GiB
+    threshold 250,000,000: processed 20,000,000 trades, 23,841 bars, available_mem=11.5 GiB
+    threshold 250,000,000: processed 30,000,000 trades, 35,969 bars, available_mem=11.7 GiB
+    threshold 250,000,000: processed 40,000,000 trades, 48,864 bars, available_mem=11.6 GiB
+    threshold 250,000,000: processed 50,000,000 trades, 61,390 bars, available_mem=11.6 GiB
+    threshold 250,000,000: processed 60,000,000 trades, 74,601 bars, available_mem=11.4 GiB
+    threshold 250,000,000: processed 70,000,000 trades, 88,422 bars, available_mem=11.7 GiB
+    threshold 250,000,000: processed 80,000,000 trades, 102,740 bars, available_mem=11.4 GiB
+    threshold 250,000,000: processed 90,000,000 trades, 118,545 bars, available_mem=11.4 GiB
+    threshold 250,000,000: processed 100,000,000 trades, 134,695 bars, available_mem=11.2 GiB
+    threshold 250,000,000: processed 110,000,000 trades, 153,428 bars, available_mem=11.3 GiB
+    threshold 250,000,000: processed 120,000,000 trades, 172,967 bars, available_mem=11.0 GiB
+    threshold 250,000,000: processed 130,000,000 trades, 192,877 bars, available_mem=11.1 GiB
+    threshold 250,000,000: processed 140,000,000 trades, 215,789 bars, available_mem=10.9 GiB
+    threshold 250,000,000: processed 150,000,000 trades, 235,878 bars, available_mem=11.0 GiB
+computing features and residuals
+running strategy and validation
+/home/famadeo/quant-lab/src/quantlab/metals_flow/strategy.py:236: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+/home/famadeo/quant-lab/scripts/run_metals_flow_filtered_residual_strategy.py:789: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  frame["month"] = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+writing artifacts
+/home/famadeo/quant-lab/scripts/run_metals_flow_filtered_residual_strategy.py:988: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month=pd.to_datetime(bars["end_ts"], utc=True).dt.to_period("M").astype(str)
+wrote /home/famadeo/quant-lab/experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y/results.json

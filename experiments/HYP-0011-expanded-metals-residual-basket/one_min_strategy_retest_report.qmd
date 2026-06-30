@@ -15,8 +15,8 @@ controls.
 
 ## Main Result
 
-Least-negative full-sample Sharpe in this fixed set: `baseline_all_six_1m` with sample
-annualized Sharpe `-0.90`.
+Best full-sample Sharpe in this fixed set: `baseline_all_seven_with_HRC_1m` with sample
+annualized Sharpe `1.02`.
 
 Selected drawdown-control variant: `selected_deadband_0p5_core4` compounded
 `-100.00%` net with sample annualized Sharpe
@@ -29,6 +29,7 @@ Selected drawdown-control variant: `selected_deadband_0p5_core4` compounded
 | `train_positive_highest_sharpe_roll_pause_1_core3` | `GC/SI/HG` | 2,931,301 | -100.00% | -99.92% | -165.99 | -52.49 | -100.00% | 8956.04% |
 | `selected_deadband_0p5_core4` | `GC/SI/HG/PL` | 2,469,209 | -100.00% | -99.90% | -150.20 | -47.50 | -100.00% | 9720.10% |
 | `baseline_all_six_1m` | `GC/SI/HG/PL/PA/ALI` | 101,283 | -67.82% | -10.85% | -2.83 | -0.90 | -72.23% | 247.27% |
+| `baseline_all_seven_with_HRC_1m` | `GC/SI/HG/PL/PA/ALI/HRC` | 3,244 | 91.83% | 14.46% | 2.23 | 1.02 | -15.24% | 6.87% |
 
 ![](one_min_strategy_equity_drawdown.png)
 
@@ -57,8 +58,8 @@ is the rough clock-time equivalent of the earlier `126` 5-minute-bar lookback.
 - Annualization uses the realized common-bar frequency of each variant, so it is
   useful for comparing these 1-minute variants but should not be read as a
   capacity-adjusted production Sharpe.
-- `ALI` and `PA` make common timestamps much sparser. Variants including `ALI`
-  are tested on a materially different event grid than `GC/SI/HG/PL`.
+- `ALI`, `PA`, and `HRC` make common timestamps much sparser. Variants including
+  these roots are tested on a materially different event grid than `GC/SI/HG/PL`.
 - The data pull had Databento quality warnings on a small number of dates; this
   retest does not adjust for those dates beyond using the continuous files as
   downloaded.

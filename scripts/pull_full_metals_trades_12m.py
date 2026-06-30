@@ -10,6 +10,7 @@ from pathlib import Path
 import databento as db
 import pandas as pd
 import polars as pl
+from databento.common.error import BentoError
 from dotenv import load_dotenv
 
 RESEARCH_ROOT = Path("/home/famadeo/research/databento-asset-browser")
@@ -23,6 +24,7 @@ SCHEMA = "trades"
 DEFAULT_START = "2025-06-22T00:00:00Z"
 DEFAULT_END = "2026-06-22T00:00:00Z"
 DEFAULT_OUTPUT_DIR = RESEARCH_ROOT / "data" / "metals_trades_12m"
+MAX_DATABENTO_RETRIES = 3
 
 
 def parse_args() -> argparse.Namespace:
@@ -73,17 +75,64 @@ def download_chunk(
         return pl.read_parquet(path)
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = client.timeseries.get_range(
-        dataset=DATASET,
-        schema=SCHEMA,
-        symbols=[f"{root}.FUT"],
-        stype_in="parent",
-        start=start.isoformat().replace("+00:00", "Z"),
-        end=end.isoformat().replace("+00:00", "Z"),
+    empty = pl.DataFrame(
+        schema={
+            "ts_event": pl.Datetime("ns", "UTC"),
+            "symbol": pl.Utf8,
+            "price": pl.Float64,
+            "size": pl.Float64,
+            "side": pl.Utf8,
+        }
     )
+    start_arg = start.isoformat().replace("+00:00", "Z")
+    end_arg = end.isoformat().replace("+00:00", "Z")
+    data = None
+    for attempt in range(1, MAX_DATABENTO_RETRIES + 1):
+        try:
+            try:
+                data = client.timeseries.get_range(
+                    dataset=DATASET,
+                    schema=SCHEMA,
+                    symbols=[f"{root}.FUT"],
+                    stype_in="parent",
+                    start=start_arg,
+                    end=end_arg,
+                )
+            except db.BentoClientError as exc:
+                if "Could not resolve smart symbols" not in str(exc):
+                    raise
+                data = client.timeseries.get_range(
+                    dataset=DATASET,
+                    schema=SCHEMA,
+                    symbols=[f"{root}.c.0"],
+                    stype_in="continuous",
+                    start=start_arg,
+                    end=end_arg,
+                )
+            break
+        except BentoError as exc:
+            if attempt == MAX_DATABENTO_RETRIES:
+                raise
+            print(
+                f"{root} {path.name}: retry {attempt}/3 after Databento stream error: {exc}",
+                flush=True,
+            )
+
+    if data is None:
+        raise RuntimeError(f"No Databento response for {root} {path.name}.")
+
     pdf = data.to_df(map_symbols=True).reset_index()
+    if pdf.empty:
+        empty.write_parquet(path)
+        return empty
+
+    keep = ["ts_event", "symbol", "price", "size", "side"]
+    if not all(col in pdf for col in keep):
+        empty.write_parquet(path)
+        return empty
+
     frame = (
-        pl.from_pandas(pdf[["ts_event", "symbol", "price", "size", "side"]])
+        pl.from_pandas(pdf[keep])
         .with_columns(
             pl.col("ts_event").cast(pl.Datetime("ns", "UTC")),
             pl.col("symbol").cast(pl.Utf8),
@@ -95,6 +144,32 @@ def download_chunk(
     )
     frame.write_parquet(path)
     return frame
+
+
+def write_manifest(
+    output_dir: Path,
+    rows: list[dict[str, object]],
+    metadata: dict[str, object],
+) -> None:
+    manifest_path = output_dir / "manifest.csv"
+    new_manifest = pd.DataFrame(rows)
+    if manifest_path.exists():
+        existing = pd.read_csv(manifest_path)
+        manifest = pd.concat([existing, new_manifest], ignore_index=True)
+        manifest = manifest.drop_duplicates(subset=["root"], keep="last")
+    else:
+        manifest = new_manifest
+    manifest = manifest.sort_values("root").reset_index(drop=True)
+    manifest.to_csv(manifest_path, index=False)
+
+    metadata["roots"] = manifest["root"].dropna().astype(str).tolist()
+    metadata["manifest"] = str(manifest_path)
+    metadata_path = output_dir / "manifest.json"
+    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+
+    print(f"\nwrote {manifest_path}", flush=True)
+    print(f"wrote {metadata_path}", flush=True)
+    print(manifest.to_string(index=False), flush=True)
 
 
 def build_root(
@@ -122,6 +197,8 @@ def build_root(
     raw.write_parquet(raw_path)
 
     outright = raw.filter(pl.col("symbol").str.contains(_outright_pattern(root)))
+    if outright.is_empty() and not raw.is_empty():
+        outright = raw
     outright_path = outright_dir / f"{root}.parquet"
     outright.write_parquet(outright_path)
 
@@ -169,9 +246,6 @@ def main() -> None:
         print(f"\n=== {root} ===", flush=True)
         manifest_rows.append(build_root(client, root, chunks, args.output_dir, args.force))
 
-    manifest = pd.DataFrame(manifest_rows)
-    manifest_path = args.output_dir / "manifest.csv"
-    manifest.to_csv(manifest_path, index=False)
     metadata = {
         "dataset": DATASET,
         "schema": SCHEMA,
@@ -180,13 +254,8 @@ def main() -> None:
         "roots": roots,
         "created_at": datetime.now(UTC).isoformat(),
         "output_dir": str(args.output_dir),
-        "manifest": str(manifest_path),
     }
-    metadata_path = args.output_dir / "manifest.json"
-    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-    print(f"\nwrote {manifest_path}", flush=True)
-    print(f"wrote {metadata_path}", flush=True)
-    print(manifest.to_string(index=False), flush=True)
+    write_manifest(args.output_dir, manifest_rows, metadata)
 
 
 if __name__ == "__main__":

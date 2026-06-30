@@ -45,7 +45,7 @@ Adding `PL`, `PA`, and `ALI` to the original `GC/SI/HG` metals residual basket i
 
 ## Experiment Design
 
-- Roots: `GC, SI, HG, PL, PA, ALI`
+- Roots: `GC, SI, HG, PL, PA, ALI, HRC`
 - Asset groups: `n/a`
 - Pair scope: `n/a`
 - Lookback: `126` bars

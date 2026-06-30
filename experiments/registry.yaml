@@ -69,3 +69,8 @@ experiments:
     status: research_pass
     owner: famadeo
     notes: Full 12-month core metals test using flow anomaly and large-minus-small flow filters; passed gross-to-cost and split/bootstrap diagnostics, pending stricter execution and forward validation.
+  - id: HYP-0014-metals-flow-filtered-residual-reversion-3y
+    title: Three-year core metals flow-filtered residual mean-reversion strategy
+    status: research_pass
+    owner: famadeo
+    notes: Three-year core-only validation passed cost and statistical gates, but PnL is concentrated in the late-2025/2026 active regime.

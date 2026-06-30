@@ -1,0 +1,35 @@
+---
+title: "HYP-0014 Three-Year Core Metals Flow-Filtered Residual Reversion"
+format: html
+---
+
+## Status
+
+Status: `research_pass_with_regime_concentration`.
+
+## Run
+
+```bash
+uv run python scripts/run_metals_flow_filtered_residual_strategy.py \
+  experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y/config.yaml
+```
+
+## Notes
+
+This test keeps the HYP-0013 strategy definition unchanged and extends the
+trade sample to three years for the liquid core metals only.
+
+## Result Summary
+
+- Primary bars: `242,162` complete `$250M` bars.
+- Base-cost net log return: `3.6702`.
+- Base-cost t-stat: `9.02`.
+- Base-cost annualized Sharpe: `5.21`.
+- Base-cost gross-to-cost ratio: `11.29x`.
+- Three-times-cost net log return: `2.9571`.
+- Three-times-cost gross-to-cost ratio: `3.76x`.
+- Max drawdown: `-7.50%`.
+
+The strategy passes the cost and full-sample statistical gates, but most PnL
+comes from the active late-2025/2026 regime. The older incremental window from
+`2023-06-22` to `2025-06-22` was only mildly positive and traded infrequently.

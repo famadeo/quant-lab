@@ -11,7 +11,7 @@ import pandas as pd
 
 DATA_DIR = Path("/home/famadeo/research/databento-asset-browser/data/metals_1m_10y")
 OUT_DIR = Path("experiments/HYP-0011-expanded-metals-residual-basket")
-ROOTS = ["GC", "SI", "HG", "PL", "PA", "ALI"]
+ROOTS = ["GC", "SI", "HG", "PL", "PA", "ALI", "HRC"]
 DEFAULT_COST_BPS = 1.5
 
 
@@ -61,6 +61,12 @@ VARIANTS = [
         name="baseline_all_six_1m",
         description="Baseline six-metal basket on 1-minute bars",
         roots=("GC", "SI", "HG", "PL", "PA", "ALI"),
+        lookback_bars=126,
+    ),
+    Variant(
+        name="baseline_all_seven_with_HRC_1m",
+        description="Baseline seven-metal basket on 1-minute bars, adding HRC",
+        roots=("GC", "SI", "HG", "PL", "PA", "ALI", "HRC"),
         lookback_bars=126,
     ),
 ]
@@ -504,8 +510,8 @@ is the rough clock-time equivalent of the earlier `126` 5-minute-bar lookback.
 - Annualization uses the realized common-bar frequency of each variant, so it is
   useful for comparing these 1-minute variants but should not be read as a
   capacity-adjusted production Sharpe.
-- `ALI` and `PA` make common timestamps much sparser. Variants including `ALI`
-  are tested on a materially different event grid than `GC/SI/HG/PL`.
+- `ALI`, `PA`, and `HRC` make common timestamps much sparser. Variants including
+  these roots are tested on a materially different event grid than `GC/SI/HG/PL`.
 - The data pull had Databento quality warnings on a small number of dates; this
   retest does not adjust for those dates beyond using the continuous files as
   downloaded.

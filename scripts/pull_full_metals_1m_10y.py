@@ -83,20 +83,54 @@ def download_chunk(
         return pl.read_parquet(path)
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = client.timeseries.get_range(
-        dataset=DATASET,
-        schema=SCHEMA,
-        symbols=[f"{root}.FUT"],
-        stype_in="parent",
-        start=start.isoformat().replace("+00:00", "Z"),
-        end=end.isoformat().replace("+00:00", "Z"),
+    empty = pl.DataFrame(
+        schema={
+            "ts_event": pl.Datetime("ns", "UTC"),
+            "symbol": pl.Utf8,
+            "open": pl.Float64,
+            "high": pl.Float64,
+            "low": pl.Float64,
+            "close": pl.Float64,
+            "volume": pl.Float64,
+        }
     )
+    start_arg = start.isoformat().replace("+00:00", "Z")
+    end_arg = end.isoformat().replace("+00:00", "Z")
+    try:
+        data = client.timeseries.get_range(
+            dataset=DATASET,
+            schema=SCHEMA,
+            symbols=[f"{root}.FUT"],
+            stype_in="parent",
+            start=start_arg,
+            end=end_arg,
+        )
+    except db.BentoClientError as exc:
+        if "Could not resolve smart symbols" not in str(exc):
+            raise
+        data = client.timeseries.get_range(
+            dataset=DATASET,
+            schema=SCHEMA,
+            symbols=[f"{root}.c.0"],
+            stype_in="continuous",
+            start=start_arg,
+            end=end_arg,
+        )
+
     pdf = data.to_df(map_symbols=True).reset_index()
+    if pdf.empty:
+        empty.write_parquet(path)
+        return empty
+
     keep = [
         col
         for col in ["ts_event", "symbol", "open", "high", "low", "close", "volume"]
         if col in pdf
     ]
+    if "ts_event" not in keep or "symbol" not in keep:
+        empty.write_parquet(path)
+        return empty
+
     frame = (
         pl.from_pandas(pdf[keep])
         .with_columns(
@@ -109,6 +143,32 @@ def download_chunk(
     )
     frame.write_parquet(path)
     return frame
+
+
+def write_manifest(
+    output_dir: Path,
+    rows: list[dict[str, object]],
+    metadata: dict[str, object],
+) -> None:
+    manifest_path = output_dir / "manifest.csv"
+    new_manifest = pd.DataFrame(rows)
+    if manifest_path.exists():
+        existing = pd.read_csv(manifest_path)
+        manifest = pd.concat([existing, new_manifest], ignore_index=True)
+        manifest = manifest.drop_duplicates(subset=["root"], keep="last")
+    else:
+        manifest = new_manifest
+    manifest = manifest.sort_values("root").reset_index(drop=True)
+    manifest.to_csv(manifest_path, index=False)
+
+    metadata["roots"] = manifest["root"].dropna().astype(str).tolist()
+    metadata["manifest"] = str(manifest_path)
+    metadata_path = output_dir / "manifest.json"
+    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+
+    print(f"\nwrote {manifest_path}", flush=True)
+    print(f"wrote {metadata_path}", flush=True)
+    print(manifest.to_string(index=False), flush=True)
 
 
 def to_1m_per_contract(raw: pl.DataFrame, root: str) -> pl.DataFrame:
@@ -131,6 +191,53 @@ def to_1m_per_contract(raw: pl.DataFrame, root: str) -> pl.DataFrame:
         )
         .filter(pl.col("close").is_not_null())
         .sort(["symbol", "ts"])
+    )
+
+
+def continuous_from_databento_continuous(raw: pl.DataFrame) -> pl.DataFrame:
+    if raw.is_empty():
+        return pl.DataFrame(
+            schema={
+                "ts": pl.Datetime("ns", "UTC"),
+                "active": pl.Utf8,
+                "cont_logret": pl.Float64,
+                "cont_close": pl.Float64,
+                "volume": pl.Float64,
+                "is_roll": pl.Boolean,
+                "cont_logprice": pl.Float64,
+            }
+        )
+
+    base = (
+        raw.select(
+            pl.col("ts_event").alias("ts"),
+            pl.col("symbol").alias("active"),
+            pl.col("close").alias("cont_close"),
+            "volume",
+        )
+        .filter(pl.col("cont_close").is_not_null())
+        .sort("ts")
+        .with_columns(
+            (pl.col("active") != pl.col("active").shift(1)).fill_null(False).alias("is_roll")
+        )
+    )
+    return (
+        base.with_columns(
+            pl.when(pl.col("is_roll"))
+            .then(None)
+            .otherwise(pl.col("cont_close").log() - pl.col("cont_close").log().shift(1))
+            .alias("cont_logret")
+        )
+        .with_columns(pl.col("cont_logret").fill_null(0.0).cum_sum().alias("cont_logprice"))
+        .select(
+            "ts",
+            "active",
+            "cont_logret",
+            "cont_close",
+            "volume",
+            "is_roll",
+            "cont_logprice",
+        )
     )
 
 
@@ -159,7 +266,10 @@ def build_root(
     raw.write_parquet(raw_path)
 
     bars = to_1m_per_contract(raw, root)
-    continuous = continuous_from_5m(bars) if not bars.is_empty() else pl.DataFrame()
+    if not bars.is_empty():
+        continuous = continuous_from_5m(bars)
+    else:
+        continuous = continuous_from_databento_continuous(raw)
     continuous_path = continuous_dir / f"{root}.parquet"
     continuous.write_parquet(continuous_path)
 
@@ -209,9 +319,6 @@ def main() -> None:
         print(f"\\n=== {root} ===", flush=True)
         manifest_rows.append(build_root(client, root, chunks, args.output_dir, args.force))
 
-    manifest = pd.DataFrame(manifest_rows)
-    manifest_path = args.output_dir / "manifest.csv"
-    manifest.to_csv(manifest_path, index=False)
     metadata = {
         "dataset": DATASET,
         "schema": SCHEMA,
@@ -220,13 +327,8 @@ def main() -> None:
         "roots": roots,
         "created_at": datetime.now(UTC).isoformat(),
         "output_dir": str(args.output_dir),
-        "manifest": str(manifest_path),
     }
-    metadata_path = args.output_dir / "manifest.json"
-    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-    print(f"\\nwrote {manifest_path}", flush=True)
-    print(f"wrote {metadata_path}", flush=True)
-    print(manifest.to_string(index=False), flush=True)
+    write_manifest(args.output_dir, manifest_rows, metadata)
 
 
 if __name__ == "__main__":
