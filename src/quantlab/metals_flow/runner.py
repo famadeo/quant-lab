@@ -12,6 +12,10 @@ import pandas as pd
 
 from quantlab.metals_flow.anomaly import build_anomaly_frame
 from quantlab.metals_flow.config import MetalsFlowConfig
+from quantlab.metals_flow.data_quality import (
+    align_continuous_marks_to_bars,
+    bar_log_returns_with_validity,
+)
 from quantlab.metals_flow.dollar_bars import (
     bar_log_returns,
     endpoint_prices,
@@ -75,9 +79,24 @@ def run_metals_flow_research(config: MetalsFlowConfig) -> MetalsFlowResearchResu
         .loc[lambda frame: frame["complete"]]
         .reset_index(drop=True)
     )
-    prices = endpoint_prices(trades, primary_bars, config.roots).reset_index(drop=True)
-    log_prices = np.log(prices.replace(0.0, np.nan)).replace([np.inf, -np.inf], np.nan).ffill()
-    returns = bar_log_returns(prices).reset_index(drop=True)
+    price_validity = None
+    continuous_marks = None
+    if config.continuous_dir is not None:
+        price_panel = _continuous_price_panel(config, primary_bars)
+        log_prices = price_panel["log_prices"].reset_index(drop=True)
+        prices = np.exp(log_prices).replace([np.inf, -np.inf], np.nan)
+        returns = bar_log_returns_with_validity(
+            log_prices,
+            price_panel["valid_price_mask"],
+        ).reset_index(drop=True)
+        price_validity = price_panel["price_validity"].reset_index(drop=True)
+        continuous_marks = price_panel["continuous_marks"].reset_index(drop=True)
+    else:
+        prices = endpoint_prices(trades, primary_bars, config.roots).reset_index(drop=True)
+        log_prices = (
+            np.log(prices.replace(0.0, np.nan)).replace([np.inf, -np.inf], np.nan).ffill()
+        )
+        returns = bar_log_returns(prices).reset_index(drop=True)
 
     features, shares, zscores = assemble_flow_features(
         primary_bars,
@@ -141,6 +160,8 @@ def run_metals_flow_research(config: MetalsFlowConfig) -> MetalsFlowResearchResu
         classifications=classifications,
         event_summary=event_summary,
         book_availability=book_availability,
+        price_validity=price_validity,
+        continuous_marks=continuous_marks,
     )
     artifacts.update(
         _write_plots(
@@ -172,6 +193,7 @@ def run_metals_flow_research(config: MetalsFlowConfig) -> MetalsFlowResearchResu
         cointegration=cointegration,
         book_availability=book_availability,
         geometry_skipped=geometry.skipped,
+        price_validity=price_validity,
     )
     results_path = config.output_dir / "results.json"
     results_path.write_text(
@@ -228,6 +250,24 @@ def _build_forward_studies(
     return pd.concat(studies, ignore_index=True)
 
 
+def _continuous_price_panel(
+    config: MetalsFlowConfig,
+    bars: pd.DataFrame,
+) -> dict[str, pd.DataFrame | pd.Series]:
+    if config.continuous_dir is None:
+        raise ValueError("continuous_dir is required for corrected price alignment")
+    continuous_by_root = {
+        root: pd.read_parquet(config.continuous_dir / f"{root}.parquet") for root in config.roots
+    }
+    return align_continuous_marks_to_bars(
+        continuous_by_root,
+        bars,
+        config.roots,
+        max_staleness_seconds=3600.0,
+        roll_cooldown_bars=1,
+    )
+
+
 def _numeric_feature_subset(
     features: pd.DataFrame,
     anomalies: pd.DataFrame,
@@ -279,6 +319,8 @@ def _write_artifacts(
     classifications: pd.DataFrame,
     event_summary: pd.DataFrame,
     book_availability: pd.DataFrame,
+    price_validity: pd.DataFrame | None = None,
+    continuous_marks: pd.DataFrame | None = None,
 ) -> dict[str, str]:
     paths = {
         "bars": config.output_dir / "primary_bars.parquet",
@@ -316,6 +358,14 @@ def _write_artifacts(
     classifications.to_csv(paths["signal_classification"], index=False)
     event_summary.to_csv(paths["event_study_summary"], index=False)
     book_availability.to_csv(paths["book_availability"], index=False)
+    if price_validity is not None:
+        path = config.output_dir / "price_validity.parquet"
+        price_validity.to_parquet(path, index=False)
+        paths["price_validity"] = path
+    if continuous_marks is not None:
+        path = config.output_dir / "continuous_marks.parquet"
+        continuous_marks.to_parquet(path, index=False)
+        paths["continuous_marks"] = path
 
     for bucket, vector in size_vectors.items():
         path = config.output_dir / f"trade_size_{bucket}_shares.parquet"
@@ -413,6 +463,7 @@ def _summary_payload(
     cointegration: pd.DataFrame,
     book_availability: pd.DataFrame,
     geometry_skipped: dict[str, str],
+    price_validity: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
     top_ic = (
         ic.assign(abs_ic=ic["spearman_ic"].abs())
@@ -431,7 +482,7 @@ def _summary_payload(
     mechanism_counts = (
         classifications["mechanism"].value_counts().to_dict() if not classifications.empty else {}
     )
-    return {
+    summary = {
         "roots": list(config.roots),
         "start": config.start,
         "end": config.end,
@@ -456,3 +507,10 @@ def _summary_payload(
         "mbp1_availability": book_availability.to_dict(orient="records"),
         "geometry_skipped": geometry_skipped,
     }
+    if price_validity is not None:
+        summary["price_validity"] = {
+            "valid_price_fraction": float(price_validity["valid_price_mask"].mean()),
+            "fresh_all_fraction": float(price_validity["fresh_all"].mean()),
+            "roll_invalid_fraction": float(price_validity["roll_invalid"].mean()),
+        }
+    return summary

@@ -34,11 +34,15 @@ experiments:
     status: reject
     owner: famadeo
     notes: Post-5-minute macro-event continuation/reversal lost money after costs.
+      Underpowered (72 OOS events; per-root training slopes are statistically zero), so
+      this is a low-confidence reject, not evidence against post-event drift.
   - id: HYP-0007-vol-clock-impact-decay
     title: Volatility-clock impact decay after extreme high-size OFI
     status: reject
     owner: famadeo
     notes: Positive pooled net result but weak t-stat and only 40% positive roots.
+      Severely underpowered (32 OOS events; 6-9 training events per root), so treat as
+      inconclusive rather than a powered reject.
   - id: HYP-0008-cross-asset-residual-baskets
     title: Cross-asset residual mean-reversion baskets
     status: reject
@@ -66,11 +70,206 @@ experiments:
     notes: Research harness for cross-sectional dollar bars, flow geometry, Mahalanobis anomalies, trade-size flow, and relative-value diagnostics.
   - id: HYP-0013-metals-flow-filtered-residual-reversion
     title: Flow-filtered metals residual mean-reversion strategy
-    status: research_pass
+    status: invalid_data_construction
     owner: famadeo
-    notes: Full 12-month core metals test using flow anomaly and large-minus-small flow filters; passed gross-to-cost and split/bootstrap diagnostics, pending stricter execution and forward validation.
+    notes: Invalidated after review; traded returns were built from mixed outright-contract root prices rather than tradable active or roll-adjusted continuous marks.
   - id: HYP-0014-metals-flow-filtered-residual-reversion-3y
     title: Three-year core metals flow-filtered residual mean-reversion strategy
-    status: research_pass
+    status: invalid_data_construction
     owner: famadeo
-    notes: Three-year core-only validation passed cost and statistical gates, but PnL is concentrated in the late-2025/2026 active regime.
+    notes: Invalidated after review; about 85% of net PnL was on mixed-contract endpoint switch bars.
+  - id: HYP-0015-metals-flow-corrected-residual-reversion
+    title: Corrected three-year metals flow-filtered residual mean-reversion validation
+    status: reject
+    owner: famadeo
+    notes: Corrected run uses all-outright trades for flow and continuous 1-minute marks for returns; base-cost net return was negative and gross/cost was below 1x.
+  - id: HYP-0016-metals-flow-incremental-signal-validation
+    title: Incremental signal validation for corrected metals flow features
+    status: reject
+    owner: famadeo
+    notes: Flow terms show weak PA/PL conditional information, but every corrected strategy variant is net negative and gross/cost remains below 0.70x.
+  - id: HYP-0017-metals-flow-corrected-research-framework-12m
+    title: Corrected 12-month metals cross-sectional flow research framework
+    status: research
+    owner: famadeo
+    notes: Full six-root corrected framework rerun; ALI is sparse/stale, standalone flow features remain weak, and relative-value residual states dominate pure flow signals.
+  - id: HYP-0018-metals-flow-corrected-research-framework-3y-core
+    title: Corrected three-year core metals cross-sectional flow research framework
+    status: research
+    owner: famadeo
+    notes: Primary multi-year corrected framework sample; five-root core data quality is strong, standalone flow ICs remain below 0.03, and q99 flow states support PA/PL event-filter research.
+  - id: HYP-0019-metals-flow-residual-state-momentum
+    title: Residual-state momentum filtered by extreme metals flow geometry
+    status: reject
+    owner: famadeo
+    notes: Direct PA/PL residual-state momentum lost money after costs; q99 flow filtering reduced turnover but not gross losses, and the 3x-cost gate admitted no roots.
+  - id: HYP-0020-metals-pa-residual-lead-lag
+    title: PA residual lead-lag into liquid metals
+    status: revise
+    owner: famadeo
+    notes: Candidate pattern passed train/test gates, but it came from iterative search and needs forward validation before any trading claim.
+  - id: HYP-0021-spd-graph-dislocation-statarb
+    title: SPD-regime graph-cluster dislocation stat-arb
+    status: research
+    owner: famadeo
+    notes: Pre-registered geometry stack using SPD regimes, standardized-sphere graph structure, and residual-cloud dislocation trades.
+  - id: HYP-0022-macro-futures-spd-dislocation
+    title: Macro futures SPD-regime residual dislocation
+    status: reject
+    owner: famadeo
+    notes: Training-selected daily macro-futures SPD residual strategy failed held-out validation and did not beat the ungated control.
+  - id: HYP-0023-macro-5m-spd-flow-dislocation
+    title: Five-minute macro futures SPD and flow dislocation
+    status: reject
+    owner: famadeo
+    notes: Short aligned 5-minute macro sample failed held-out validation; SPD/flow conditioning did not validate.
+  - id: HYP-0024-metals-1m-ewma-event-exit
+    title: Metals one-minute EWMA event entry with endogenous exit
+    status: reject
+    owner: famadeo
+    notes: Selected EWMA event-exit variant was positive in test but failed full-sample robustness after costs.
+  - id: HYP-0025-metals-gbdt-carry-md-backtest
+    title: Metals gradient-boosting carry and Mahalanobis backtest
+    status: reject
+    owner: famadeo
+    notes: Gradient boosting did not overcome turnover costs; best net variant was negative after costs.
+  - id: HYP-0026-metals-rates-usd-beta
+    title: Metals beta to rates and USD factors
+    status: research
+    owner: famadeo
+    notes: Diagnostic factor-beta study for USD and rates-price exposure, used for hedging and residualization context.
+  - id: HYP-0027-metals-usd-beta-hedged-vol-adjusted-returns
+    title: USD-beta-hedged vol-adjusted core metals returns
+    status: research
+    owner: famadeo
+    notes: Diagnostic visualization of core metals log returns after USD beta hedging and volatility adjustment.
+  - id: HYP-0028-metals-macro-residual-dislocation
+    title: Metals macro-residual dislocation strategy
+    status: research
+    owner: famadeo
+    notes: Daily macro-hedged residual dislocation prototype showed weak/inconsistent evidence and requires stricter hedge-cost treatment.
+  - id: HYP-0029-metals-focused-negative-dislocations
+    title: Focused negative metals residual dislocations
+    status: research
+    owner: famadeo
+    notes: Focused residual-dislocation branch for negative side effects; keep as research context rather than a promoted strategy.
+  - id: HYP-0030-metals-convenience-yield-basis
+    title: Metals convenience-yield basis backtest
+    status: revise
+    owner: famadeo
+    notes: Initial carry-curve dislocation backtest found promising structure but required synchronized marks, robust extremes, and execution filters.
+  - id: HYP-0031-metals-convenience-yield-basis-5m-sync
+    title: Metals convenience-yield basis with five-minute synchronized marks
+    status: revise
+    owner: famadeo
+    notes: Synchronized 5-minute carry-curve backtest improved implementation realism and motivated robust-extreme detection.
+  - id: HYP-0032-metals-convenience-yield-robust-extremes
+    title: Metals convenience-yield robust-extreme basis strategy
+    status: revise
+    owner: famadeo
+    notes: Robust extreme detectors improved basis signal stability; needs stronger cost, liquidity, and capacity validation.
+  - id: HYP-0033-metals-convenience-yield-hazard-exit
+    title: Metals convenience-yield hazard-exit strategy
+    status: revise
+    owner: famadeo
+    notes: Hazard-style exits improved the basis strategy branch, but capacity and turnover constraints remain central.
+  - id: HYP-0034-metals-intraday-time-of-day-predictiveness
+    title: Core metals intraday time-of-day predictiveness
+    status: research
+    owner: famadeo
+    notes: Daily time-of-day diagnostics for individual and cross-sectional intraday metal return patterns.
+  - id: HYP-0035-metals-intraday-reversal-backtest
+    title: Core metals intraday reversal backtest
+    status: reject
+    owner: famadeo
+    notes: Intraday reversal candidates did not survive robust cost and train/test validation strongly enough for promotion.
+  - id: HYP-0036-metals-hourly-funding
+    title: Hourly metals funding from annualized curve carry
+    status: research
+    owner: famadeo
+    notes: Defines hourly metals funding as annualized futures-curve carry and builds the funding panel for later tests.
+  - id: HYP-0037-metals-funding-vs-realized-returns
+    title: Metals funding paid versus realized returns
+    status: research
+    owner: famadeo
+    notes: Accounting study comparing realized drift against path funding paid over matched horizons.
+  - id: HYP-0038-metals-funding-predictiveness
+    title: Metals funding and carry-change forward-return predictiveness
+    status: research
+    owner: famadeo
+    notes: Decile and HAC diagnostics for whether funding level or funding changes forecast forward returns.
+  - id: HYP-0039-metals-funding-adjusted-drift-backtest
+    title: Metals funding-adjusted drift pressure backtest
+    status: reject
+    owner: famadeo
+    notes: Funding-adjusted drift pressure did not produce a robust net trading strategy after realistic costs.
+  - id: HYP-0040-core-metals-pairwise-covariance
+    title: Core metals pairwise covariance over time
+    status: research
+    owner: famadeo
+    notes: Ten-year continuous 1-minute-derived covariance diagnostics for the core metals complex.
+  - id: HYP-0041-core-metals-5m-log-returns
+    title: Core metals five-minute log-return panel
+    status: research
+    owner: famadeo
+    notes: Builds and visualizes null-forward-filled 5-minute core metals returns and cumulative log returns.
+  - id: HYP-0042-core-metals-robust-ewma-pca
+    title: Core metals robust EWMA PCA residuals
+    status: research
+    owner: famadeo
+    notes: Rolling robust PCA decomposition; PC1-PC2 residuals isolate metal-specific behavior after common modes.
+  - id: HYP-0043-core-metals-carry-conditioned-fair-value
+    title: Core metals carry-conditioned fair value
+    status: research
+    owner: famadeo
+    notes: Defines fair value conditional on cost of carry and identifies price deviations from the carry-conditioned anchor.
+  - id: HYP-0044-fair-value-dislocation-monetization
+    title: Fair-value dislocation monetization
+    status: research
+    owner: famadeo
+    notes: Tests ways to monetize carry-conditioned fair-value dislocations; findings guide higher-frequency timing tests.
+  - id: HYP-0045-hf-fair-value-dislocation-timing
+    title: High-frequency fair-value dislocation timing
+    status: research
+    owner: famadeo
+    notes: Five-minute timing study for fair-value dislocation entries and exits before full execution modeling.
+  - id: HYP-0046-hf-walkforward-execution
+    title: High-frequency walk-forward execution model
+    status: revise
+    owner: famadeo
+    notes: Adds walk-forward selection and root-specific execution cost estimates; used as the cost model for later portfolio tests.
+  - id: HYP-0047-core-metals-equal-weight-benchmark
+    title: Core metals equal-weight benchmark
+    status: benchmark
+    owner: famadeo
+    notes: One-over-N core metals benchmark from 2021 onward; this is the baseline strategy to beat.
+  - id: HYP-0048-core-metals-inverse-vol-benchmark
+    title: Core metals thirty-day inverse-volatility benchmark
+    status: benchmark
+    owner: famadeo
+    notes: Equal-vol adjusted long-only benchmark using trailing 30-day realized volatility.
+  - id: HYP-0049-core-metals-hourly-autoregression
+    title: Core metals hourly autoregression diagnostics
+    status: research
+    owner: famadeo
+    notes: Measures hourly autoregression by metal; effects are generally weak, with PA showing the clearest negative AR signature.
+  - id: HYP-0050-core-metals-correlation-aware-benchmark
+    title: Core metals correlation-aware benchmark
+    status: benchmark
+    owner: famadeo
+    notes: Long-only covariance-aware portfolio benchmark; 30-day shrinkage minimum variance became the main portfolio candidate.
+  - id: HYP-0051-core-metals-long-short-overlays
+    title: Core metals long-short overlay benchmark
+    status: reject
+    owner: famadeo
+    notes: Long-short overlays marginally reduced drawdown but did not improve net Sharpe or CAGR versus the long-only min-var candidate.
+  - id: HYP-0052-core-metals-drawdown-control
+    title: Core metals drawdown-control overlays
+    status: revise
+    owner: famadeo
+    notes: Daily volatility, trend, and drawdown throttles reduced max drawdown materially; soft daily throttling is the preferred risk-control candidate.
+  - id: HYP-0053-metals-convenience-yield-mechanism
+    title: Metals convenience-yield mechanism study
+    status: research
+    owner: famadeo
+    notes: Mechanism-focused convenience-yield study linking futures curve carry, inventories, crowding, and executable basis trades.

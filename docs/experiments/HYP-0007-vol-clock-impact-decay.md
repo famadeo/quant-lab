@@ -4,7 +4,7 @@
 
 - Status: `reject`
 - Owner: `famadeo`
-- Decision notes: Positive pooled net result but weak t-stat and only 40% positive roots.
+- Decision notes: Positive pooled net result but weak t-stat and only 40% positive roots. Severely underpowered (32 OOS events; 6-9 training events per root), so treat as inconclusive rather than a powered reject.
 
 ## Hypothesis
 

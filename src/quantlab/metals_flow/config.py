@@ -38,6 +38,7 @@ class MetalsFlowConfig:
     trade_dir: Path = Path(
         "/home/famadeo/research/databento-asset-browser/data/metals_trades_12m/outright"
     )
+    continuous_dir: Path | None = None
     mbp1_dir: Path = Path(
         "/home/famadeo/research/databento-asset-browser/data/metals_mbp1_30d/outright_chunks"
     )
@@ -93,6 +94,9 @@ class MetalsFlowConfig:
                 research.get("fair_value_min_periods", cls.fair_value_min_periods)
             ),
             trade_dir=path_value(data.get("trade_dir"), cls.trade_dir),
+            continuous_dir=path_value(data.get("continuous_dir"), cls.continuous_dir)
+            if data.get("continuous_dir") is not None
+            else None,
             mbp1_dir=path_value(data.get("mbp1_dir"), cls.mbp1_dir),
             cache_dir=path_value(data.get("cache_dir"), cls.cache_dir),
             output_dir=path_value(outputs.get("directory"), cls.output_dir),

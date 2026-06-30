@@ -86,6 +86,69 @@ def convergence_state_positions(
     return positions
 
 
+def residual_momentum_positions(
+    residual_zscores: pd.DataFrame,
+    entry_mask: pd.Series,
+    root_entry_masks: pd.DataFrame | None = None,
+    *,
+    entry_z: float = 2.0,
+    exit_z: float = 0.75,
+    max_holding_bars: int = 20,
+    stop_z: float | None = 5.0,
+    cooldown_bars: int = 0,
+) -> pd.DataFrame:
+    zscores = residual_zscores.replace([np.inf, -np.inf], np.nan)
+    entry_mask = entry_mask.reindex(zscores.index).fillna(False).astype(bool)
+    if root_entry_masks is None:
+        root_entry_masks = pd.DataFrame(True, index=zscores.index, columns=zscores.columns)
+    else:
+        root_entry_masks = root_entry_masks.reindex(index=zscores.index, columns=zscores.columns)
+        root_entry_masks = root_entry_masks.fillna(False).astype(bool)
+
+    positions = pd.DataFrame(0.0, index=zscores.index, columns=zscores.columns)
+    state = {root: 0.0 for root in zscores.columns}
+    age = {root: 0 for root in zscores.columns}
+    cooldown = {root: 0 for root in zscores.columns}
+
+    for i, (_, row) in enumerate(zscores.iterrows()):
+        global_entry = bool(entry_mask.iloc[i])
+        for root, z_value in row.items():
+            current = state[root]
+            if cooldown[root] > 0:
+                cooldown[root] -= 1
+
+            if not np.isfinite(z_value):
+                current = 0.0
+                age[root] = 0
+                cooldown[root] = max(cooldown[root], cooldown_bars)
+            elif current != 0.0:
+                age[root] += 1
+                decayed = abs(z_value) <= exit_z
+                reversed_sign = float(current) * float(z_value) <= 0.0
+                timed_out = max_holding_bars > 0 and age[root] >= max_holding_bars
+                stopped = stop_z is not None and abs(z_value) >= stop_z
+                if decayed or reversed_sign or timed_out or stopped:
+                    current = 0.0
+                    age[root] = 0
+                    cooldown[root] = max(cooldown[root], cooldown_bars)
+
+            if (
+                current == 0.0
+                and cooldown[root] == 0
+                and np.isfinite(z_value)
+                and global_entry
+                and bool(root_entry_masks[root].iloc[i])
+                and abs(z_value) >= entry_z
+            ):
+                current = float(np.sign(z_value))
+                age[root] = 0
+
+            state[root] = current
+            positions.iat[i, positions.columns.get_loc(root)] = current
+
+    return positions
+
+
 def demean_and_normalize_positions(raw_positions: pd.DataFrame) -> pd.DataFrame:
     positions = raw_positions.astype(float).copy()
     active = positions.abs().sum(axis=1) > 0.0

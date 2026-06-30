@@ -2,9 +2,9 @@
 
 > This page is part of Francisco Amadeo's proprietary quantitative research record. Public access is provided for review and documentation only; no license is granted to copy, reuse, redistribute, commercialize, or implement the research, strategy logic, or derived conclusions.
 
-- Status: `research_pass`
+- Status: `invalid_data_construction`
 - Owner: `famadeo`
-- Decision notes: Full 12-month core metals test using flow anomaly and large-minus-small flow filters; passed gross-to-cost and split/bootstrap diagnostics, pending stricter execution and forward validation.
+- Decision notes: Invalidated after review; traded returns were built from mixed outright-contract root prices rather than tradable active or roll-adjusted continuous marks.
 
 ## Hypothesis
 

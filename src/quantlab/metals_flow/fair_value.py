@@ -94,22 +94,34 @@ def ewma_relative_value_residuals(
     return residuals, zscores
 
 
-def pairwise_cointegration(log_prices: pd.DataFrame, *, min_obs: int = 500) -> pd.DataFrame:
+def pairwise_cointegration(
+    log_prices: pd.DataFrame,
+    *,
+    min_obs: int = 500,
+    max_obs: int | None = None,
+    maxlag: int | None = None,
+    autolag: str | None = "aic",
+) -> pd.DataFrame:
     rows = []
     clean = log_prices.replace([np.inf, -np.inf], np.nan).ffill().dropna(how="all")
     for root_a, root_b in combinations(clean.columns, 2):
         pair = clean[[root_a, root_b]].dropna()
         if len(pair) < min_obs:
             continue
-        score, pvalue, _ = coint(pair[root_a], pair[root_b])
+        original_observations = len(pair)
+        if max_obs is not None and len(pair) > max_obs:
+            positions = np.linspace(0, len(pair) - 1, max_obs).round().astype(int)
+            pair = pair.iloc[np.unique(positions)]
+        score, pvalue, _ = coint(pair[root_a], pair[root_b], maxlag=maxlag, autolag=autolag)
         beta = _ols_beta(pair[root_b], pair[root_a])
         spread = pair[root_a] - beta * pair[root_b]
-        adf = adfuller(spread.dropna(), autolag="AIC")
+        adf = adfuller(spread.dropna(), maxlag=maxlag, autolag=autolag)
         rows.append(
             {
                 "root_a": root_a,
                 "root_b": root_b,
-                "observations": len(pair),
+                "observations": original_observations,
+                "test_observations": len(pair),
                 "coint_tstat": float(score),
                 "coint_pvalue": float(pvalue),
                 "hedge_beta_a_on_b": beta,

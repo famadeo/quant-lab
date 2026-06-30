@@ -6,6 +6,14 @@
 - Tests pass.
 - Results are logged to MLflow.
 - Costs and one-bar signal lag are included.
+- Statistical power is sufficient: the count of independent out-of-sample
+  observations (events, days, or non-overlapping bars) is large enough to detect the
+  hypothesized effect. A test that cannot reject the null because the sample is tiny is
+  recorded as `inconclusive`, not `reject`. State the minimum sample in the hypothesis.
+- Headline Sharpe ratios carry a significance qualifier (t-stat, probabilistic Sharpe,
+  or deflated Sharpe when many configurations were screened), not just a point estimate.
+- Traded returns come from tradable marks: roll-adjusted continuous or active-contract
+  prices, never mixed outright-contract endpoints (see the metals data-quality audit).
 
 ## Review To Paper Trading
 

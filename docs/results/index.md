@@ -20,3 +20,13 @@ This page aggregates publishable method-level metrics. It is not a promotion lis
 | [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_1.0 | 154.62% | 5.44 | -6.98% |  |
 | [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_2.0 | 139.00% | 4.90 | -7.15% |  |
 | [HYP-0013-metals-flow-filtered-residual-reversion](../experiments/HYP-0013-metals-flow-filtered-residual-reversion.md) | primary | cost_3.0 | 123.39% | 4.36 | -7.32% |  |
+| [HYP-0014-metals-flow-filtered-residual-reversion-3y](../experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y.md) | primary | cost_0.0 | 402.67% | 5.69 | -7.37% |  |
+| [HYP-0014-metals-flow-filtered-residual-reversion-3y](../experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y.md) | primary | cost_1.0 | 367.02% | 5.21 | -7.50% |  |
+| [HYP-0014-metals-flow-filtered-residual-reversion-3y](../experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y.md) | primary | cost_2.0 | 331.36% | 4.72 | -7.63% |  |
+| [HYP-0014-metals-flow-filtered-residual-reversion-3y](../experiments/HYP-0014-metals-flow-filtered-residual-reversion-3y.md) | primary | cost_3.0 | 295.71% | 4.22 | -7.76% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_0.0 | 18.26% | 0.50 | -32.05% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_1.0 | -20.85% | -0.58 | -49.69% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_2.0 | -59.95% | -1.65 | -69.44% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_3.0 | -99.06% | -2.73 | -101.47% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_5.0 | -177.27% | -4.82 | -178.89% |  |
+| [HYP-0015-metals-flow-corrected-residual-reversion](../experiments/HYP-0015-metals-flow-corrected-residual-reversion.md) | primary | cost_10.0 | -372.80% | -9.55 | -373.55% |  |

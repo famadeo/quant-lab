@@ -4,7 +4,7 @@
 
 - Status: `reject`
 - Owner: `famadeo`
-- Decision notes: Post-5-minute macro-event continuation/reversal lost money after costs.
+- Decision notes: Post-5-minute macro-event continuation/reversal lost money after costs. Underpowered (72 OOS events; per-root training slopes are statistically zero), so this is a low-confidence reject, not evidence against post-event drift.
 
 ## Hypothesis
 

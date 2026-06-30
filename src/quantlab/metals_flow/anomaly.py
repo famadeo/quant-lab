@@ -32,15 +32,20 @@ def robust_mahalanobis_snapshot(
     min_periods: int = 100,
     ridge: float = 1e-6,
     random_state: int = 7,
+    max_fit_rows: int = 10_000,
 ) -> pd.Series:
     values = shares.to_numpy(dtype=float)
     distances = np.full(len(values), np.nan)
     valid = np.isfinite(values).all(axis=1)
     if valid.sum() < min_periods:
         return pd.Series(distances, index=shares.index, name="md_robust_snapshot")
+    fit_values = values[valid]
+    if len(fit_values) > max_fit_rows:
+        positions = np.linspace(0, len(fit_values) - 1, max_fit_rows).round().astype(int)
+        fit_values = fit_values[np.unique(positions)]
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        estimator = MinCovDet(random_state=random_state, support_fraction=0.90).fit(values[valid])
+        estimator = MinCovDet(random_state=random_state, support_fraction=0.90).fit(fit_values)
     center = estimator.location_
     cov = _regularize_covariance(estimator.covariance_, ridge)
     inverse = np.linalg.pinv(cov)
@@ -96,9 +101,12 @@ def _windowed_mahalanobis(
     min_periods: int,
     ridge: float,
 ) -> np.ndarray:
+    if method == "expanding":
+        return _expanding_mahalanobis(values, min_periods, ridge)
+
     distances = np.full(len(values), np.nan)
     for i in range(len(values)):
-        start = 0 if method == "expanding" else max(0, i - window)
+        start = max(0, i - window)
         history = values[start:i]
         history = history[np.isfinite(history).all(axis=1)]
         if len(history) < min_periods or not np.isfinite(values[i]).all():
@@ -108,6 +116,32 @@ def _windowed_mahalanobis(
         inverse = np.linalg.pinv(_regularize_covariance(cov, ridge))
         diff = values[i] - center
         distances[i] = float(np.sqrt(diff @ inverse @ diff.T))
+    return distances
+
+
+def _expanding_mahalanobis(
+    values: np.ndarray,
+    min_periods: int,
+    ridge: float,
+) -> np.ndarray:
+    distances = np.full(len(values), np.nan)
+    n_cols = values.shape[1]
+    count = 0
+    total = np.zeros(n_cols)
+    cross = np.zeros((n_cols, n_cols))
+    for i, row in enumerate(values):
+        valid = np.isfinite(row).all()
+        if valid and count >= min_periods:
+            center = total / count
+            centered_cross = cross - count * np.outer(center, center)
+            cov = centered_cross / max(count - 1, 1)
+            inverse = np.linalg.pinv(_regularize_covariance(cov, ridge))
+            diff = row - center
+            distances[i] = float(np.sqrt(diff @ inverse @ diff.T))
+        if valid:
+            count += 1
+            total += row
+            cross += np.outer(row, row)
     return distances
 
 
