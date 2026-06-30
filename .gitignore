@@ -20,12 +20,22 @@ mlflow.db
 mlflow.db-*
 experiments/**/*results.json
 experiments/**/*.parquet
+experiments/**/*.csv.gz
 experiments/**/*pair_*.csv
 experiments/**/*returns.csv
+experiments/**/event_log.csv
+experiments/**/selected_event_log.csv
+experiments/**/candidate_event_log.csv
+experiments/**/fair_value_panel.csv
+experiments/**/fair_value_daily.csv
 experiments/**/strict_*.json
 experiments/**/strict_*.csv
 reports/generated/
 notebooks/.ipynb_checkpoints/
+notebooks/explorations/assets/**/*.parquet
+notebooks/explorations/assets/**/annualized_carry_5m_exact_observations.csv
+notebooks/explorations/assets/**/trade_mahalanobis_5m.csv
+notebooks/explorations/assets/**/md_shock_episode_returns_long.csv
 
 # Data policy: keep directory structure, do not commit raw or derived data.
 data/raw/**
