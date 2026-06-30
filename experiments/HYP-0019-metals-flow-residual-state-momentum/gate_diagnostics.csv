@@ -1,0 +1,12 @@
+metric,value
+bars,242166.0
+valid_mask_fraction,0.9969731506487286
+no_flow_fraction,0.9969731506487286
+no_flow_count,241433.0
+md_q95_fraction,0.0494578099320301
+md_q95_count,11977.0
+md_q99_fraction,0.010005533394448436
+md_q99_count,2423.0
+md_q95_threshold_median,3.7949452674580555
+md_q99_threshold_median,6.549459782669026
+md_rolling_median,1.3693387746329488

@@ -5,7 +5,7 @@ format: html
 
 ## Status
 
-Status: `research_pass`.
+Status: `invalid_data_construction`.
 
 ## Run
 
@@ -30,6 +30,6 @@ uv run python scripts/run_metals_flow_filtered_residual_strategy.py \
 
 ## Notes
 
-This is a research result, not a production trading recommendation. The result
-should be stress-tested with stricter execution assumptions, contract-roll
-handling, capital constraints, and independent forward data before paper trading.
+This result is invalidated by the HYP-0015 audit. The original runner collapsed
+many outright contracts into one root-level last-trade price and computed returns
+from that mixed-contract series. Use HYP-0015 for the corrected validation.

@@ -1,0 +1,11 @@
+building sorted symbol-preserving trade cache
+building threshold dollar bars
+  threshold 100,000,000: 288,189 bars
+  threshold 250,000,000: 115,705 bars
+  threshold 500,000,000: 57,925 bars
+  threshold 1,000,000,000: 28,982 bars
+aligning corrected continuous marks
+computing flow features, anomalies, and forward studies
+computing fair-value and geometry diagnostics
+writing artifacts and plots
+wrote /home/famadeo/quant-lab/experiments/HYP-0017-metals-flow-corrected-research-framework-12m/results.json

@@ -1,0 +1,28 @@
+# HYP-0024 Report
+
+Decision: **reject**.
+
+## Selected Variant
+
+- Variant: `ewma1440_entry2.5_exit0.25_stop4`
+- EWMA half-life: 1440 1-minute bars
+- Entry / exit / stop z: 2.5 / 0.25 / 4.0
+
+## Split Metrics
+
+| split   |   gross_return |   cost_return |   net_return |   gross_to_cost |      tstat |     sharpe |   max_drawdown |   mean_gross_exposure |    turnover |
+|:--------|---------------:|--------------:|-------------:|----------------:|-----------:|-----------:|---------------:|----------------------:|------------:|
+| train   |       0.041144 |      0.198549 |    -0.157405 |        0.207224 |  -0.746991 |  -0.746991 |      -0.245551 |              0.445215 |  883.416667 |
+| embargo |       0.000000 |      0.000000 |     0.000000 |      nan        | nan        | nan        |       0.000000 |              0.000000 |    0.000000 |
+| test    |       0.309985 |      0.115727 |     0.194258 |        2.678590 |   1.481933 |   1.481933 |      -0.059260 |              0.419426 |  514.750000 |
+| full    |       0.351129 |      0.314276 |     0.036853 |        1.117265 |   0.105826 |   0.105826 |      -0.245551 |              0.436250 | 1398.166667 |
+
+## Event Stats
+
+|   entries |   closed_trades |   decay_exits |   flip_exits |   stop_exits |   invalid_exits |   mean_hold_bars |   std_hold_bars |   max_hold_bars |   open_trades_at_end |
+|----------:|----------------:|--------------:|-------------:|-------------:|----------------:|-----------------:|----------------:|----------------:|---------------------:|
+|    837.00 |          836.00 |        694.00 |         9.00 |       133.00 |            0.00 |           357.34 |          323.05 |         1995.00 |                 1.00 |
+
+## Limitation
+
+This run is metals-only because full 1-minute continuous CL/rates bars were not present locally.

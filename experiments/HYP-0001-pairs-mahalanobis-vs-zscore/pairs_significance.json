@@ -1,0 +1,33 @@
+{
+  "experiment_id": "HYP-0001-pairs-mahalanobis-vs-zscore",
+  "methods": [
+    {
+      "annualized_sharpe": -11.246361197541752,
+      "deflated_sharpe_ratio": 1.0830586238039262e-07,
+      "excess_kurtosis": 16.93298888039751,
+      "expected_max_sharpe_per_obs": 0.06141895141146829,
+      "fixed_universe_annualized_sharpe": -10.161465398300457,
+      "fixed_universe_total_return": -0.008603043718418357,
+      "method": "mahalanobis",
+      "n_trials": 179,
+      "observations": 2329,
+      "per_obs_sharpe": -0.042643929445633125,
+      "probabilistic_sharpe_ratio": 0.01681206968110153,
+      "skew": -1.657746604739042
+    },
+    {
+      "annualized_sharpe": -9.62509175303106,
+      "deflated_sharpe_ratio": 2.433363501153509e-07,
+      "excess_kurtosis": 60.56354523014277,
+      "expected_max_sharpe_per_obs": 0.07557534636058329,
+      "fixed_universe_annualized_sharpe": -8.300770739770595,
+      "fixed_universe_total_return": -0.0038130761072436847,
+      "method": "zscore",
+      "n_trials": 179,
+      "observations": 2329,
+      "per_obs_sharpe": -0.0364964032734178,
+      "probabilistic_sharpe_ratio": 0.05065698072349639,
+      "skew": 3.67611416432964
+    }
+  ]
+}

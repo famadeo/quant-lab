@@ -1,0 +1,2 @@
+/home/famadeo/quant-lab/scripts/run_metals_flow_residual_momentum_strategy.py:472: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)

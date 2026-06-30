@@ -1,0 +1,30 @@
+experiment:
+  id: HYP-0019-metals-flow-residual-state-momentum
+  title: Residual-state momentum filtered by extreme metals flow geometry
+  owner: famadeo
+
+data:
+  source_experiment: /home/famadeo/quant-lab/experiments/HYP-0018-metals-flow-corrected-research-framework-3y-core
+  cost_estimates: /home/famadeo/quant-lab/experiments/HYP-0015-metals-flow-corrected-residual-reversion/cost_estimates.csv
+
+universe:
+  roots: [GC, SI, HG, PL, PA]
+  target_roots: [PL, PA]
+
+research:
+  horizons: [1, 2, 5, 10, 20, 50]
+  primary_horizon: 20
+
+strategy:
+  entry_z: 2.0
+  exit_z: 0.75
+  stop_z: 5.0
+  md_quantiles: [0.95, 0.99]
+  threshold_window: 20000
+  threshold_min_periods: 2000
+  train_fraction: 0.70
+  embargo_bars: 50
+  cost_hurdle_multiple: 3.0
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0019-metals-flow-residual-state-momentum

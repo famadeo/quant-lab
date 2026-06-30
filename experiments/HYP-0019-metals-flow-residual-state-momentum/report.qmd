@@ -1,0 +1,67 @@
+# HYP-0019-metals-flow-residual-state-momentum Residual-State Momentum Flow Filter
+
+## Purpose
+
+This experiment tests whether residual-state momentum becomes executable when restricted to extreme cross-sectional flow-geometry regimes.
+
+Source framework: `/home/famadeo/quant-lab/experiments/HYP-0018-metals-flow-corrected-research-framework-3y-core`
+
+Universe: `GC, SI, HG, PL, PA`
+
+Target roots: `PL, PA`
+
+Primary horizon: `20` bars.
+
+## Strategy Definition
+
+The strategy enters in the direction of the residual z-score:
+
+- positive residual z-score: long the displaced root, short the normalized complex hedge;
+- negative residual z-score: short the displaced root, long the normalized complex hedge.
+
+Positions are dollar-normalized after cross-sectional demeaning. Exits occur on residual decay, sign reversal, max holding period, stop z-score, invalid price marks, or cooldown rules.
+
+Flow filters use shifted walk-forward Mahalanobis thresholds. The q99 variants therefore do not use the full-sample q99 label from the research framework.
+
+## Cost Hurdle Calibration
+
+The 3x-cost gate is calibrated on the training split only.
+
+| Root | Train events | Mean signed h20 bps | Round-trip cost bps | 3x hurdle bps | Clears |
+|---|---:|---:|---:|---:|---|
+| PL | 288 | 8.96 | 4.77 | 14.30 | False |
+| PA | 337 | 1.00 | 7.04 | 21.12 | False |
+
+## Variant Results
+
+| Variant | Entries | Gross | Cost | Net | Gross/Cost | Max DD |
+|---|---:|---:|---:|---:|---:|---:|
+| `all_resid_momentum_no_flow_h20` | 3,216 | -0.4728 | 1.2680 | -1.7408 | -0.37 | -1.7647 |
+| `pa_pl_resid_momentum_no_flow_h20` | 1,361 | -0.4770 | 0.7815 | -1.2585 | -0.61 | -1.2670 |
+| `pa_pl_resid_momentum_md_q95_h20` | 1,385 | -0.0620 | 0.7538 | -0.8158 | -0.08 | -0.8356 |
+| `pa_pl_resid_momentum_md_q99_h20` | 533 | -0.1054 | 0.2790 | -0.3844 | -0.38 | -0.4012 |
+| `pa_pl_resid_momentum_md_q99_h50` | 447 | -0.0629 | 0.2374 | -0.3003 | -0.26 | -0.3133 |
+| `pa_pl_resid_momentum_md_q99_z2_5_h20` | 273 | -0.0491 | 0.1530 | -0.2022 | -0.32 | -0.2067 |
+| `pa_pl_resid_momentum_md_q99_3x_cost_gate_h20` | 0 | 0.0000 | 0.0000 | 0.0000 | inf | 0.0000 |
+
+Best nonzero full-sample variant: `pa_pl_resid_momentum_md_q99_z2_5_h20`, net `-0.2022`, gross/cost `-0.32`.
+
+Best nonzero purged-test variant: `pa_pl_resid_momentum_md_q99_z2_5_h20`, net `-0.0921`, gross/cost `-1.56`.
+
+Variants passing positive net and 3x gross/cost: `0`.
+
+## Conclusion
+
+The direct PA/PL residual-state momentum thesis is rejected as an executable strategy in this implementation. The q99 flow filter reduces turnover and losses, but it does not flip gross returns positive. The 3x-cost gate admits no roots because the training-split q99 expected moves are below the required hurdle.
+
+The remaining research lead is not direct own-residual momentum. If this family is revisited, the next test should be cross-residual predictors, such as `HG` residual state predicting `PL`, with a vectorized state machine and the same train/test and 3x-cost gates.
+
+## Artifacts
+
+- `strategy_variant_metrics.csv`
+- `split_metrics.csv`
+- `monthly_returns.csv`
+- `event_edge_calibration.csv`
+- `residual_momentum_event_study.csv`
+- `portfolio_forward_scatter.csv`
+- `plots/`

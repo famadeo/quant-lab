@@ -1,0 +1,47 @@
+{
+  "experiment_id": "HYP-0003-equity-futures-1m-pairs",
+  "methods": [
+    {
+      "annualized_sharpe": -0.8723380336841181,
+      "deflated_sharpe_ratio": 3.3499890614576192e-18,
+      "excess_kurtosis": 158.11956379276572,
+      "expected_max_sharpe_per_obs": 0.039837374915321105,
+      "fixed_universe_annualized_sharpe": 0.8822274605256721,
+      "fixed_universe_total_return": 0.006339419226303322,
+      "method": "mahalanobis",
+      "n_trials": 73,
+      "observations": 43390,
+      "per_obs_sharpe": -0.0014792616368503866,
+      "probabilistic_sharpe_ratio": 0.37880549192524315,
+      "skew": -2.1993879127502907
+    },
+    {
+      "annualized_sharpe": -2.8584546002610742,
+      "deflated_sharpe_ratio": 7.305051216698391e-11,
+      "excess_kurtosis": 121.06455180851967,
+      "expected_max_sharpe_per_obs": 0.02575143594889081,
+      "fixed_universe_annualized_sharpe": -0.5170662949330289,
+      "fixed_universe_total_return": -0.002750817566298025,
+      "method": "zscore",
+      "n_trials": 73,
+      "observations": 43390,
+      "per_obs_sharpe": -0.004847206091642061,
+      "probabilistic_sharpe_ratio": 0.1549748574213427,
+      "skew": -2.440099279588219
+    },
+    {
+      "annualized_sharpe": 0.2554123090720554,
+      "deflated_sharpe_ratio": 1.6663585974502614e-08,
+      "excess_kurtosis": 85.55557426031206,
+      "expected_max_sharpe_per_obs": 0.026946394991916083,
+      "fixed_universe_annualized_sharpe": 1.33791362148394,
+      "fixed_universe_total_return": 0.0035295193051709806,
+      "method": "zscore_mahalanobis",
+      "n_trials": 73,
+      "observations": 43390,
+      "per_obs_sharpe": 0.0004331137882341587,
+      "probabilistic_sharpe_ratio": 0.5359446507815084,
+      "skew": 0.2353942317524259
+    }
+  ]
+}

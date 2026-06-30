@@ -1,0 +1,24 @@
+building symbol-preserving sorted trade cache
+building cross-sectional flow bars
+  threshold 100,000,000: 603,426 bars
+  threshold 250,000,000: 242,167 bars
+  threshold 500,000,000: 121,217 bars
+  threshold 1,000,000,000: 60,643 bars
+aligning continuous prices to dollar bars
+/home/famadeo/quant-lab/scripts/run_metals_flow_corrected_residual_strategy.py:914: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  | roll_any.shift(offset).fillna(False)
+/home/famadeo/quant-lab/scripts/run_metals_flow_corrected_residual_strategy.py:915: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  | roll_any.shift(-offset).fillna(False)
+/home/famadeo/quant-lab/scripts/run_metals_flow_corrected_residual_strategy.py:937: FutureWarning: Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
+  valid_return = valid_price_mask & valid_price_mask.shift(1).fillna(False)
+computing flow features and residuals
+running leak-controlled strategy
+running validation diagnostics
+/home/famadeo/quant-lab/src/quantlab/metals_flow/strategy.py:236: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  month = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+/home/famadeo/quant-lab/scripts/run_metals_flow_corrected_residual_strategy.py:1011: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  frame["month"] = pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str)
+/home/famadeo/quant-lab/scripts/run_metals_flow_corrected_residual_strategy.py:1111: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  "month": pd.to_datetime(timestamps, utc=True).dt.to_period("M").astype(str),
+writing artifacts
+wrote /home/famadeo/quant-lab/experiments/HYP-0015-metals-flow-corrected-residual-reversion/results.json

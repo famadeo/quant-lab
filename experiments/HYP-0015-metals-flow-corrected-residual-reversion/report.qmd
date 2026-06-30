@@ -1,0 +1,62 @@
+---
+title: "HYP-0015-metals-flow-corrected-residual-reversion Corrected Validation"
+format: html
+---
+
+## Status
+
+Status: `corrected_validation`.
+
+This run corrects the HYP-0014 data construction issue by using all-outright
+trades only for flow features and 1-minute roll-adjusted continuous prices for
+returns and residuals.
+
+## Headline
+
+- Net log return: `-0.208462`
+- Gross log return: `0.182592`
+- Cost log return: `0.391054`
+- Gross/cost: `0.467`
+- Bar t-stat: `-0.998`
+- Annualized Sharpe: `-0.576`
+- Max drawdown: `-0.496925`
+- Active bars: `114,817`
+
+## Data Validity
+
+- Valid continuous-price mark fraction: `99.806%`
+- Roll-invalid fraction: `0.071%`
+- Fresh-all fraction: `99.875%`
+- Size thresholds are calibrated only from the first
+  `30` days.
+- Flow thresholds use shifted rolling quantiles, not full-sample quantiles.
+
+## Split Metrics
+
+```text
+      split                         start_ts                           end_ts  split_index  test_start_index  observations  active_bars  gross_return  cost_return  net_return  mean_net_bps     tstat  annualized_sharpe  hit_rate  max_drawdown  gross_to_cost    turnover
+      train 2023-06-22 00:45:01.900427+00:00 2025-11-14 06:23:22.751343+00:00       169516            169589        169516        84279     -0.112083     0.270561   -0.382644     -0.022573 -2.299751          -1.586801  0.232869     -0.496925      -0.414263 1174.944444
+test_purged 2025-11-14 10:05:00.314564+00:00 2026-06-21 23:56:08.707536+00:00       169516            169589         72577        30465      0.297816     0.120142    0.177674      0.024481  1.408669           1.485444  0.181118     -0.068490       2.478872  512.750000
+```
+
+## Daily HAC
+
+```text
+frequency  lags  observations      mean     tstat  net_return
+    daily     0           934 -0.000223 -1.184023   -0.208462
+    daily     5           934 -0.000223 -1.145579   -0.208462
+    daily    20           934 -0.000223 -1.090222   -0.208462
+    daily    60           934 -0.000223 -0.991352   -0.208462
+    daily   120           934 -0.000223 -0.812192   -0.208462
+```
+
+## Plots
+
+- `plots/strategy_equity_drawdown.png`
+- `plots/monthly_returns.png`
+- `plots/cost_sensitivity.png`
+- `plots/flow_filters.png`
+- `plots/price_validity.png`
+- `plots/gross_exposure.png`
+- `plots/residual_zscores.png`
+- `plots/top_ic.png`

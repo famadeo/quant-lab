@@ -1,0 +1,97 @@
+---
+title: "HYP-0023 5-Minute Macro-Futures SPD/Flow Dislocation"
+format: gfm
+---
+
+## Result
+
+Status: **reject** as an executable strategy in this implementation.
+
+The run used aligned 5-minute bars and 5-minute trade-flow features for `GC`,
+`SI`, `HG`, `PL`, `PA`, `CL`, `SR3`, `ZQ`, `ZT`, `ZF`, `ZN`, `TN`, `ZB`, and
+`UB`. The common sample spans 2026-05-18 13:40 UTC through 2026-06-15 20:05 UTC,
+with 994 aligned bars after requiring full-universe return and flow coverage.
+
+Rates were sign-normalized into yield/risk space for regimes, residuals, and
+flow features, then converted back to futures-price exposure for PnL.
+
+## Selected Variant
+
+The train-selected variant was:
+
+- Variant: `ungated_residual_reversion`
+- Residual lookback: 390 bars
+- Entry threshold: `abs(z) >= 2.0`
+- Flow threshold: `0.5` (irrelevant for this ungated variant)
+- Rebalance interval: 3 bars
+
+Training performance:
+
+- Net return: 0.90%
+- Gross/cost: 3.51x
+- Bar-level t-stat: 1.35
+- Max drawdown: -0.32%
+
+Held-out performance:
+
+- Net return: -0.85%
+- Gross/cost: 0.22x
+- Bar-level t-stat: -1.29
+- Max drawdown: -1.19%
+
+The selected variant failed the decision rule and did not validate the SPD/flow
+conditioning thesis.
+
+## Diagnostics
+
+The state model produced enough regime labels for a short-sample test:
+
+- Stable regime fraction: 22.03%
+- Transition regime fraction: 12.58%
+- Train/test dates: 12 / 9
+
+The best held-out diagnostic result was a stable flow-confirmed residual
+reversion variant:
+
+- Variant: `stable_flow_confirmed_reversion`
+- Lookback: 156 bars
+- Entry threshold: `1.5`
+- Flow threshold: `0.5`
+- Rebalance: 6 bars
+- Held-out net return: 0.14%
+- Held-out t-stat: 0.25
+- Held-out gross/cost: 1.56x
+
+That is too small and too weak to promote. It is at most a hint that the
+mechanism should be retested on a longer 5-minute history.
+
+Flow-only tests were not useful. Flow-only momentum was strongly negative, but
+the corresponding flow-only reversion controls did not clear costs. This argues
+against a simple universal flow-fade edge in this sample.
+
+## Artifacts
+
+- `results.json`
+- `variant_metrics.csv`
+- `data_inventory.csv`
+- `flow_volume_by_root.csv`
+- `regime_features.csv`
+- `mst_edges.csv`
+- `selected_portfolio_returns.csv`
+- `selected_positions.parquet`
+- `selected_zscores.parquet`
+- `selected_root_gross_contributions.csv`
+- `selected_daily_test_returns.csv`
+- `selected_test_equity.png`
+
+## Next Step
+
+This one-month RTH sample is too short for a strong conclusion, but the tested
+form is not ready. The next useful branch is not more parameter tuning; it is a
+data expansion:
+
+1. Build a longer 5-minute continuous panel for the same roots.
+2. Add contract-specific spread/MBP1 cost estimates instead of flat bps costs.
+3. Re-run only the stable flow-confirmed residual-reversion family with the same
+   preregistered gates.
+

@@ -1,0 +1,93 @@
+experiment:
+  id: HYP-0021-spd-graph-dislocation-statarb
+  title: SPD-regime graph-cluster dislocation stat-arb
+  owner: famadeo
+  status: research
+
+data:
+  source_project: /home/famadeo/archive/SP500_statarb
+  price_col: adj_close
+  start: 2021-05-24
+  end: 2026-05-20
+  baseline_metrics: /home/famadeo/archive/SP500_statarb/data/backtests/graph_pca_residual/metrics.json
+
+universe:
+  asset_class: us_equities
+  min_train_obs_frac: 0.95
+  min_full_obs_frac: 0.95
+  min_cluster_names: 8
+
+geometry:
+  covariance_lookback_days: 252
+  shrinkage:
+    method: diagonal_blend
+    alpha: 0.10
+    eigen_floor: 1.0e-6
+  spd_metric: log_euclidean
+  regime_features:
+    - spd_velocity
+    - spd_acceleration
+    - top_eigen_share
+    - effective_rank
+    - average_correlation
+    - graph_rewire_rate
+  regime_method: rolling_quantiles
+  stable_regime:
+    max_spd_velocity_quantile: 0.40
+    min_edge_persistence_quantile: 0.60
+  transition_regime:
+    min_spd_velocity_quantile: 0.80
+
+graph:
+  distance: correlation_chord
+  backbone: mst
+  rich_filter: pmfg_or_tmfg_if_available
+  fallback: mst_plus_top_k_neighbors
+  top_k_neighbors: 8
+  edge_persistence_lookback: 6
+
+dislocation:
+  residual_model:
+    factors:
+      - market
+      - sector
+      - pca
+      - graph_neighbors
+    pca_components: 5
+  signal_windows: [20, 40]
+  outlier_score: robust_residual_z
+  entry_z: [1.0, 1.5, 2.0]
+  exit_z: [0.0, 0.25, 0.5]
+
+portfolio:
+  rebalance_days: [5, 10]
+  names_per_cluster_side: [3, 5]
+  max_gross: 1.0
+  beta_neutral: true
+  sector_neutral: true
+  cluster_neutral: true
+  cost_bps: [5.0, 1.0]
+
+research:
+  train_fraction: 0.60
+  embargo_days: 20
+  walk_forward: true
+  variants:
+    - stable_reversion
+    - transition_skip
+    - transition_continuation
+
+decision_rules:
+  status_if_pass: revise
+  min_oos_net_return_5bp: 0.0
+  min_gross_to_cost_5bp: 3.0
+  min_oos_sharpe: 1.0
+  min_daily_tstat: 2.0
+  max_drawdown: -0.15
+  must_beat_baselines:
+    - graph_pca_ungated
+    - graph_pca_gated
+    - pca_only_gated
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0021-spd-graph-dislocation-statarb

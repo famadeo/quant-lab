@@ -1,0 +1,26 @@
+experiment:
+  id: HYP-0016-metals-flow-incremental-signal-validation
+  title: Incremental signal validation for corrected metals flow features
+  owner: famadeo
+
+data:
+  source_experiment: /home/famadeo/quant-lab/experiments/HYP-0015-metals-flow-corrected-residual-reversion
+
+universe:
+  roots: [GC, SI, HG, PL, PA]
+
+research:
+  horizons: [1, 2, 5, 10, 20, 50]
+  primary_horizon: 20
+
+strategy:
+  entry_z: 2.0
+  exit_z: 0.25
+  stop_z: 5.0
+  md_quantile: 0.90
+  large_small_quantile: 0.70
+  threshold_window: 20000
+  threshold_min_periods: 2000
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0016-metals-flow-incremental-signal-validation

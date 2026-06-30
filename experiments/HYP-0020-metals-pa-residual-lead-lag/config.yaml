@@ -1,0 +1,41 @@
+experiment:
+  id: HYP-0020-metals-pa-residual-lead-lag
+  title: PA residual lead-lag into liquid metals
+  owner: famadeo
+
+data:
+  source_experiment: /home/famadeo/quant-lab/experiments/HYP-0018-metals-flow-corrected-research-framework-3y-core
+  cost_estimates: /home/famadeo/quant-lab/experiments/HYP-0015-metals-flow-corrected-residual-reversion/cost_estimates.csv
+
+universe:
+  roots: [GC, SI, HG, PL, PA]
+
+research:
+  horizons: [1, 2, 5, 10, 20, 50]
+  train_fraction: 0.70
+  embargo_bars: 50
+  entry_thresholds: [1.5, 2.0, 2.5, 3.0]
+  rolling_z_window: 20000
+  rolling_z_min_periods: 2000
+  candidate_limit: 100
+  min_train_events: 250
+  min_train_event_t: 2.0
+
+selected_strategy:
+  signal: resid:PA
+  entry: 1.5
+  hold_bars: 50
+  direction: 1.0
+  targets:
+    GC: 0.5
+    SI: 0.5
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0020-metals-pa-residual-lead-lag
+
+decision_rules:
+  status_if_pass: revise
+  min_test_net_return: 0.0
+  min_test_gross_to_cost: 3.0
+  min_full_tstat: 2.0
+  min_train_net_return: 0.0

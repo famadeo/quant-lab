@@ -1,0 +1,33 @@
+{
+  "experiment_id": "HYP-0002-equity-top100-pairs",
+  "methods": [
+    {
+      "annualized_sharpe": -5.070140658180346,
+      "deflated_sharpe_ratio": 0.14419070258554673,
+      "excess_kurtosis": 32.168462309841445,
+      "expected_max_sharpe_per_obs": 0.0010994926047299962,
+      "fixed_universe_annualized_sharpe": -5.070140658180346,
+      "fixed_universe_total_return": -0.027121509402072586,
+      "method": "mahalanobis",
+      "n_trials": 10,
+      "observations": 2624,
+      "per_obs_sharpe": -0.019224949004317794,
+      "probabilistic_sharpe_ratio": 0.1576301844918122,
+      "skew": -2.1783726552212537
+    },
+    {
+      "annualized_sharpe": 7.733936145917427,
+      "deflated_sharpe_ratio": 0.9220942914808407,
+      "excess_kurtosis": 91.89314102150873,
+      "expected_max_sharpe_per_obs": 0.0037723964519832203,
+      "fixed_universe_annualized_sharpe": 7.733936145917427,
+      "fixed_universe_total_return": 0.02196292991477078,
+      "method": "zscore",
+      "n_trials": 10,
+      "observations": 2624,
+      "per_obs_sharpe": 0.029325523300427515,
+      "probabilistic_sharpe_ratio": 0.9483256233845503,
+      "skew": 5.795439084035374
+    }
+  ]
+}

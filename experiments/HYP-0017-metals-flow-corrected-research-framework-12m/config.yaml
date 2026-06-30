@@ -1,0 +1,36 @@
+experiment:
+  id: HYP-0017-metals-flow-corrected-research-framework-12m
+  title: Corrected 12-month metals cross-sectional flow research framework
+  owner: famadeo
+
+data:
+  start: "2025-06-23T00:00:00Z"
+  end: "2026-06-22T00:00:00Z"
+  trade_dir: /home/famadeo/research/databento-asset-browser/data/metals_trades_12m/outright
+  continuous_dir: /home/famadeo/research/databento-asset-browser/data/metals_1m_10y/continuous
+  mbp1_dir: /home/famadeo/research/databento-asset-browser/data/metals_mbp1_30d/outright_chunks
+  cache_dir: /home/famadeo/quant-lab/data/features/metals_flow_corrected_research_framework_12m
+
+universe:
+  roots: [GC, SI, HG, PL, PA, ALI]
+
+research:
+  thresholds: [100000000, 250000000, 500000000, 1000000000]
+  primary_threshold: 250000000
+  horizons: [1, 2, 5, 10, 20, 50]
+  rolling_window: 1000
+  min_periods: 500
+  ewma_halflife: 500
+  fair_value_lookback: 2000
+  fair_value_min_periods: 1000
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0017-metals-flow-corrected-research-framework-12m
+
+decision_rules:
+  pass_status: paper_trade
+  revise_status: revise
+  fail_status: reject
+  min_abs_ic: 0.03
+  min_event_tstat: 2.0
+  min_gross_to_cost: 3.0

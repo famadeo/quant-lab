@@ -1,0 +1,61 @@
+# HYP-0016 Incremental Signal Validation
+
+## Purpose
+
+This experiment tests whether corrected cross-sectional flow variables add useful predictive power beyond residual dislocation alone. It uses the HYP-0015 corrected artifact set, where flow is built from all outright trades and returns/residuals are built from 1-minute roll-adjusted continuous marks.
+
+## Strategy Variant Results
+
+| Variant | Gross | Cost | Net | Gross/Cost | Max DD |
+|---|---:|---:|---:|---:|---:|
+| residual only | 0.4830 | 0.6941 | -0.2112 | 0.70x | -0.7049 |
+| residual + MD | 0.3594 | 0.5513 | -0.1919 | 0.65x | -0.5887 |
+| residual + large-small L1 | 0.4538 | 0.6511 | -0.1973 | 0.70x | -0.6214 |
+| residual + MD + L1 | 0.2681 | 0.4777 | -0.2095 | 0.56x | -0.5325 |
+| residual + MD + L1 + root confirmation | 0.1826 | 0.3911 | -0.2085 | 0.47x | -0.4969 |
+
+No variant comes close to the required 3x gross/cost hurdle. Flow filters reduce activity and drawdown, but they also reduce gross return faster than they reduce costs.
+
+## Incremental Predictive Tests
+
+HAC regressions were run by root and horizon using:
+
+- residual reversion signal
+- rolling Mahalanobis flow distance
+- large-small contribution-vector distance
+- root large-minus-small contribution share
+- residual-flow interaction terms
+
+There are statistically visible terms in PA and PL. The strongest flow term is PA rolling Mahalanobis distance at horizon 10 with t-stat 3.80. Twelve flow-related terms survive 5% FDR adjustment. The economic size remains small: most significant coefficients are fractions of a basis point per one-standard-deviation move.
+
+The corrected interpretation is therefore:
+
+- residual reversion exists most clearly in PA and PL at short horizons;
+- some flow variables condition that residual signal;
+- the conditioned signal is not yet monetizable under the current execution-cost model.
+
+## Event Study
+
+At the 20-bar horizon, flow gating improves signed forward residual reversion for GC and PA, but it degrades SI and HG. PL is mixed. This root inconsistency is the main reason the portfolio-level result remains weak.
+
+Portfolio-level signal/forward-return scatter is near zero across variants. The HYP-0015 root-filtered strategy has a 20-bar portfolio scatter correlation of 0.0013 and mean signed forward return near zero before transaction-cost timing.
+
+## Decision
+
+Status: reject as an executable strategy.
+
+The corrected flow features contain weak conditional information, mainly in PA/PL, but the effect is too small, too root-specific, and too turnover-intensive to clear costs. Future work should treat this as a signal-research lead, not a deployable strategy.
+
+## Artifacts
+
+- `strategy_variant_metrics.csv`
+- `predictive_regressions.csv`
+- `conditioned_event_study.csv`
+- `portfolio_forward_scatter.csv`
+- `root_forward_scatter.csv`
+- `plots/variant_net_equity.png`
+- `plots/variant_net_drawdowns.png`
+- `plots/predictive_regression_tstats_h20.png`
+- `plots/conditioned_event_returns_h20.png`
+- `plots/portfolio_signal_forward_scatter_h20.png`
+- `plots/root_signal_forward_scatter_h20.png`

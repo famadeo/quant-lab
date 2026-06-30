@@ -5,7 +5,7 @@ format: html
 
 ## Status
 
-Status: `research_pass_with_regime_concentration`.
+Status: `invalid_data_construction`.
 
 ## Run
 
@@ -19,7 +19,7 @@ uv run python scripts/run_metals_flow_filtered_residual_strategy.py \
 This test keeps the HYP-0013 strategy definition unchanged and extends the
 trade sample to three years for the liquid core metals only.
 
-## Result Summary
+## Original Result Summary
 
 - Primary bars: `242,162` complete `$250M` bars.
 - Base-cost net log return: `3.6702`.
@@ -30,6 +30,11 @@ trade sample to three years for the liquid core metals only.
 - Three-times-cost gross-to-cost ratio: `3.76x`.
 - Max drawdown: `-7.50%`.
 
-The strategy passes the cost and full-sample statistical gates, but most PnL
-comes from the active late-2025/2026 regime. The older incremental window from
-`2023-06-22` to `2025-06-22` was only mildly positive and traded infrequently.
+## Audit Update
+
+This result is invalidated by the HYP-0015 audit. The original runner built
+returns from a mixed stream of outright contracts per root rather than from a
+tradable active contract or roll-adjusted continuous mark. Reconstructed endpoint
+diagnostics showed that about 85% of selected net PnL occurred on bars where at
+least one root switched endpoint contract. The corrected HYP-0015 run uses
+continuous 1-minute price marks and rejects the strategy after costs.

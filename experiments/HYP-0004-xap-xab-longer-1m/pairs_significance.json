@@ -1,0 +1,47 @@
+{
+  "experiment_id": "HYP-0004-xap-xab-longer-1m",
+  "methods": [
+    {
+      "annualized_sharpe": -3.9541854268617262,
+      "deflated_sharpe_ratio": 0.22294142608505657,
+      "excess_kurtosis": 77.11028186355496,
+      "expected_max_sharpe_per_obs": 0.0,
+      "fixed_universe_annualized_sharpe": -3.9541854268617262,
+      "fixed_universe_total_return": -0.05010692895973112,
+      "method": "mahalanobis",
+      "n_trials": 1,
+      "observations": 12754,
+      "per_obs_sharpe": -0.00670528462716037,
+      "probabilistic_sharpe_ratio": 0.22294142608505657,
+      "skew": -2.111579290776912
+    },
+    {
+      "annualized_sharpe": 7.138102591741664,
+      "deflated_sharpe_ratio": 0.916421611076834,
+      "excess_kurtosis": 68.8851880897131,
+      "expected_max_sharpe_per_obs": 0.0,
+      "fixed_universe_annualized_sharpe": 7.138102591741664,
+      "fixed_universe_total_return": 0.06830497176580685,
+      "method": "zscore",
+      "n_trials": 1,
+      "observations": 12754,
+      "per_obs_sharpe": 0.012104391779493727,
+      "probabilistic_sharpe_ratio": 0.916421611076834,
+      "skew": 1.934831952584303
+    },
+    {
+      "annualized_sharpe": 6.020235749828599,
+      "deflated_sharpe_ratio": 0.8752557884028119,
+      "excess_kurtosis": 86.84285006008615,
+      "expected_max_sharpe_per_obs": 0.0,
+      "fixed_universe_annualized_sharpe": 6.020235749828599,
+      "fixed_universe_total_return": 0.03328298065874358,
+      "method": "zscore_mahalanobis",
+      "n_trials": 1,
+      "observations": 12754,
+      "per_obs_sharpe": 0.010208776237700345,
+      "probabilistic_sharpe_ratio": 0.8752557884028119,
+      "skew": 0.009567072604922422
+    }
+  ]
+}

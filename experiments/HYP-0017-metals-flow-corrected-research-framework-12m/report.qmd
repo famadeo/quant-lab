@@ -1,0 +1,120 @@
+# HYP-0017 Corrected 12-Month Metals Flow Research Framework
+
+## Purpose
+
+This reruns the HYP-0012 cross-sectional metals flow research framework on the new full 12-month dataset for:
+
+`GC`, `SI`, `HG`, `PL`, `PA`, `ALI`
+
+The corrected implementation uses all outright trades for flow and roll-adjusted 1-minute continuous marks for returns and fair-value residuals.
+
+## Data Quality
+
+The run covers `2025-06-23` through `2026-06-22`.
+
+Primary `$250M` cross-sectional bars:
+
+- complete bars: `115,704`
+- bars/day: `317.87`
+- median duration: `120.3s`
+- median trades/bar: `501`
+- valid all-root price fraction: `84.60%`
+
+The low valid-price fraction is almost entirely ALI:
+
+| Root | Fresh mark fraction | Zero-return fraction |
+|---|---:|---:|
+| GC | 100.00% | 27.73% |
+| SI | 100.00% | 28.96% |
+| HG | 100.00% | 30.86% |
+| PL | 99.99% | 27.92% |
+| PA | 99.88% | 37.48% |
+| ALI | 84.66% | 82.08% |
+
+ALI is present, but it is not comparable to the other metals at this horizon. It contributes only `0.068%` of notional and has many stale/flat bars.
+
+## Flow Geometry
+
+Mean contribution by root:
+
+| Root | Mean contribution |
+|---|---:|
+| GC | 71.22% |
+| SI | 20.82% |
+| HG | 5.02% |
+| PL | 2.15% |
+| PA | 0.73% |
+| ALI | 0.07% |
+
+GC dominates `93.9%` of bars and SI dominates `5.7%`. The complex is therefore not a balanced six-asset simplex in practice; it is mostly a GC/SI flow clock with small industrial/PGM satellites.
+
+## Predictive Results
+
+Across `2,376` information-coefficient tests:
+
+- `237` survive 5% FDR;
+- only `20` have absolute IC >= `0.03`;
+- most absolute IC >= `0.03` results target ALI.
+
+The top ALI ICs are around `0.03` to `0.056`, but these should not be interpreted as immediately tradable because ALI has sparse flow contribution and an `82%` zero-return fraction.
+
+Excluding ALI as the target, no feature reaches absolute IC `0.03`. The strongest non-ALI flow result is:
+
+- `complex_signed_notional_ratio -> PA`, horizon 1, IC `0.029`.
+
+## Anomaly Event Studies
+
+Mahalanobis q99 events show the cleanest positive conditional forward returns in HG:
+
+| Root | Horizon 20 mean bps | Horizon 20 t-stat | Horizon 50 mean bps | Horizon 50 t-stat |
+|---|---:|---:|---:|---:|
+| HG | 5.62 | 2.46 | 6.96 | 2.57 |
+| PA | 4.21 | 1.71 | 4.07 | 0.92 |
+| PL | 1.10 | 0.45 | -2.32 | -0.56 |
+| GC | -0.53 | -0.44 | 1.46 | 0.69 |
+| SI | 1.34 | 0.50 | -3.26 | -0.67 |
+| ALI | -0.16 | -0.13 | -2.13 | -0.95 |
+
+This is a research lead, not a portfolio signal. The sign is not stable across roots, horizons, or less extreme thresholds. q90 anomalies are negative at 50 bars for GC/SI/PL/PA.
+
+## Relative Value
+
+Signal classification shows much stronger long-horizon relationships in the fair-value residual z-scores than in raw flow features. The largest t-stats are residual-z relationships at horizon 50, especially involving HG, PA, and PL residual states predicting SI/GC/PL returns.
+
+This supports the previous lesson: cross-sectional metals research is more promising as a relative-value state model, with flow used as a weak conditioning/regime variable, not as the primary alpha.
+
+## Cointegration
+
+No pair passes the corrected bounded Engle-Granger screen at `p < 0.05`. The closest pairs are:
+
+- `SI/PL`, p-value `0.071`;
+- `HG/ALI`, p-value `0.111`.
+
+This argues against treating intraday 12-month bar-level metals spreads as clean stationary cointegration trades without additional regime conditioning.
+
+## Conclusion
+
+The corrected full-framework rerun does not identify a standalone, robust cross-sectional flow anomaly strategy.
+
+Main conclusions:
+
+1. ALI can be included for descriptive geometry, but it should not be treated as equally liquid or equally reliable for executable MFT signals.
+2. Flow anomaly signals are weak and root-specific after corrected price construction.
+3. Extreme flow anomaly states may matter for HG at 20-50 bar horizons, but this needs a dedicated executable strategy test.
+4. Relative-value residual states are materially stronger than pure flow features.
+5. The next rigorous test should combine relative-value residual states with flow-regime filters, excluding or separately modeling ALI.
+
+## Artifacts
+
+- `primary_bars.parquet`
+- `bar_continuous_prices.parquet`
+- `bar_returns.parquet`
+- `flow_features.parquet`
+- `flow_anomalies.parquet`
+- `forward_studies.csv`
+- `information_coefficients.csv`
+- `signal_classification.csv`
+- `cointegration.csv`
+- `trade_size_disagreement.parquet`
+- `price_validity.parquet`
+- `plots/`

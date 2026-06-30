@@ -1,0 +1,75 @@
+experiment:
+  id: HYP-0022-macro-futures-spd-dislocation
+  title: Macro-futures SPD-regime residual dislocation
+  owner: famadeo
+  status: research
+
+data:
+  continuous_dir: /home/famadeo/research/databento-asset-browser/data/futures_continuous
+  start: 2010-06-07
+  end: 2024-11-29
+
+universe:
+  roots: [GC, SI, HG, PL, PA, CL, ZT, ZF, ZN, ZB]
+  rates_roots: [ZT, ZF, ZN, ZB]
+  groups:
+    GC: metals
+    SI: metals
+    HG: metals
+    PL: metals
+    PA: metals
+    CL: energy
+    ZT: rates
+    ZF: rates
+    ZN: rates
+    ZB: rates
+
+regime:
+  covariance_lookback_days: 252
+  quantile_lookback_days: 252
+  shrinkage_alpha: 0.10
+  eigen_floor: 1.0e-6
+  stable_max_spd_velocity_quantile: 0.40
+  stable_min_edge_persistence_quantile: 0.60
+  transition_min_spd_velocity_quantile: 0.80
+
+residual_model:
+  ridge: 1.0e-3
+  zscore_window_days: 63
+  lookback_days: [126, 252, 504]
+  factors:
+    - market
+    - rates_level
+    - rates_slope
+    - precious
+    - pgm
+    - cyclical
+    - metals_broad
+
+strategy:
+  entry_z: [1.0, 1.5, 2.0]
+  max_signal_abs: 2.0
+  rebalance_days: [5, 10, 21]
+  cost_bps_per_unit_turnover: 1.5
+  variants:
+    - ungated_reversion
+    - stable_reversion
+    - non_transition_reversion
+    - stable_reversion_transition_momentum
+
+validation:
+  train_fraction: 0.70
+  selection_metric: train_tstat
+  min_train_net_return: 0.0
+  min_train_gross_to_cost: 1.0
+
+decision_rules:
+  status_if_pass: revise
+  status_if_fail: reject
+  min_test_net_return: 0.0
+  min_test_gross_to_cost: 3.0
+  min_test_tstat: 1.65
+  require_beats_ungated_control: true
+
+outputs:
+  directory: /home/famadeo/quant-lab/experiments/HYP-0022-macro-futures-spd-dislocation

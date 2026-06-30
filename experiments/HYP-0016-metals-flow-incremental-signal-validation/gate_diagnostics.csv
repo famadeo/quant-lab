@@ -1,0 +1,11 @@
+metric,value
+bars,242166.0
+valid_price_fraction,0.9980591825442052
+md_gate_fraction,0.09834163342500599
+size_gate_fraction,0.3201853274200342
+combined_flow_gate_fraction,0.0551439921376246
+GC_root_size_mask_fraction,0.28976404615016144
+SI_root_size_mask_fraction,0.2996704739723991
+HG_root_size_mask_fraction,0.31772833510897486
+PL_root_size_mask_fraction,0.3181825689816077
+PA_root_size_mask_fraction,0.3346464821651264

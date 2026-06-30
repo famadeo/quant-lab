@@ -1,0 +1,74 @@
+---
+title: "HYP-0022 Macro-Futures SPD-Regime Residual Dislocation"
+format: gfm
+---
+
+## Result
+
+Status: **reject** as an executable strategy in this implementation.
+
+The run used daily roll-adjusted continuous futures for `GC`, `SI`, `HG`, `PL`,
+`PA`, `CL`, `ZT`, `ZF`, `ZN`, and `ZB` from 2010-06-07 through 2024-11-29.
+Rates were sign-normalized into yield/risk space for regime and residual
+estimation, then converted back to futures-price exposure for PnL.
+
+The training-selected variant was:
+
+- Variant: `non_transition_reversion`
+- Residual lookback: 252 trading days
+- Entry threshold: `abs(z) >= 1.0`
+- Rebalance interval: 10 trading days
+
+Training performance was positive:
+
+- Net return: 27.93%
+- Gross/cost: 6.89x
+- Daily t-stat: 1.64
+- Max drawdown: -8.07%
+
+Held-out performance failed:
+
+- Net return: -11.45%
+- Gross/cost: -4.08x
+- Daily t-stat: -0.81
+- Max drawdown: -20.65%
+
+The selected variant also failed to beat its ungated control, so the preregistered
+decision rule rejects the implementation.
+
+## Diagnostics
+
+The SPD regime layer produced usable state coverage:
+
+- Stable regime fraction: 35.40%
+- Transition regime fraction: 18.56%
+- Observations: 4,483 daily bars
+- Train/test observations: 3,138 / 1,345
+
+The best held-out result in the diagnostic grid was `ungated_reversion_lb504_z2_rb5`
+with 24.86% test net return and daily t-stat 1.91. That result is not acceptable
+as a selected edge because the same variant had -23.22% train net return and
+training t-stat -1.44.
+
+This is the main lesson: post-2020 residual reversion exists in parts of the
+grid, but the train-selected SPD-gated rule does not transport.
+
+## Artifacts
+
+- `results.json`
+- `variant_metrics.csv`
+- `regime_features.csv`
+- `mst_edges.csv`
+- `selected_portfolio_returns.csv`
+- `selected_positions.parquet`
+- `selected_zscores.parquet`
+- `selected_root_gross_contributions.csv`
+- `selected_monthly_test_returns.csv`
+- `selected_test_equity.png`
+
+## Next Step
+
+Do not tune this daily residual implementation further without changing the
+mechanism. The better follow-up is the 5-minute macro extension using the local
+`futures_5m` and `trades/*_flow_5m` files, where `TN`, `UB`, `SR3`, and `ZQ`
+are available and where regime-conditioned flow/impact states can be tested.
